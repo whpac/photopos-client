@@ -1,4 +1,5 @@
 @use '../../styles/colors' as colors;
+@use '../../styles/layout' as layout;
 
 .home-page--container {
     display: flex;
@@ -9,6 +10,8 @@
     .home-page--map-box {
         flex-grow: 1;
         border-right: 1px solid colors.$blue-100;
+
+        @include layout.stretch-contents;
     }
 
     .home-page--poi-list-box {
