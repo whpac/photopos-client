@@ -1,20 +1,30 @@
 @use '../../styles/colors' as colors;
 @use '../../styles/layout' as layout;
 
+$map-overlay-border: #e0e0e0;
+$map-overlay-shadow: transparentize(colors.$black, 0.85);
+
 .home-page--container {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 360px;
 
     .home-page--map-box {
-        flex-grow: 1;
-        border-right: 1px solid colors.$blue-100;
+        grid-row: 1;
+        grid-column: 1 / span 2;
 
         @include layout.stretch-contents;
     }
 
     .home-page--poi-list-box {
-        width: 400px;
+        grid-row: 1;
+        grid-column: 2;
+        background: colors.$white;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 12px;
+        z-index: 1000; // To show it over the map
+
+        border: 1px solid $map-overlay-border;
+        box-shadow: 1px 2px 6px 1px $map-overlay-shadow;
     }
 }
