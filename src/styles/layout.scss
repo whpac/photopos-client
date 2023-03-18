@@ -1,0 +1,6 @@
+/**
+ * Makes the child fill this element completely.
+ */
+@mixin stretch-contents {
+    display: grid;
+}
