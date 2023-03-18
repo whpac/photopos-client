@@ -1,13 +1,29 @@
+@use 'styles/colors' as colors;
+
+$page-background: colors.$blue-50;
+$content-border: colors.$blue-100;
+$content-shadow1: transparentize(colors.$blue-100, 0.5);
+$content-shadow2: rgba(0, 0, 0, 0.07);
+
 .photopos-container {
-    padding: 16px;
-    background-color: #f8f8f8;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 24px;
+    background-color: $page-background;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
     .photopos-header {
-        padding: 8px;
+        flex-grow: 0;
     }
 
     .photopos-content {
         border-radius: 20px;
-        background-color: #fff;
+        background-color: colors.$white;
+        flex-grow: 1;
+        overflow: auto;
+        border: 1px solid $content-border;
+        box-shadow: 0 0 4px 1px $content-shadow1, 0 1px 4px 1px $content-shadow2;
     }
 }

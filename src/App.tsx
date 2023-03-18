@@ -1,11 +1,12 @@
 import './App.scss';
 import HomePage from './pages/home/HomePage';
+import Navbar from './views/navbar/Navbar';
 
 function App() {
     return (
         <div className="photopos-container">
             <div className="photopos-header">
-                <h1>PhotoPos</h1>
+                <Navbar />
             </div>
             <div className="photopos-content">
                 <HomePage />
