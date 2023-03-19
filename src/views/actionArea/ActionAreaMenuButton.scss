@@ -1,0 +1,33 @@
+@use '../../styles/colors' as colors;
+
+.action-area-menu-button {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    box-sizing: content-box;
+    
+    font-size: 1.25rem;
+    width: 1.5rem;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    color: transparentize(colors.$black, 0.35);
+    border-radius: 4px;
+
+    &:hover {
+        color: colors.$black;
+        background-color: transparentize(colors.$black, 0.95);
+    }
+}
+
+.action-area-menu-button__selected {
+    color: colors.$blue-500;
+    background-color: transparentize(colors.$black, 0.95);
+    box-shadow: 0 0 4px rgba(0,0,0,0.15) inset;
+    cursor: default;
+
+    &:hover {
+        color: colors.$blue-500;
+    }
+}

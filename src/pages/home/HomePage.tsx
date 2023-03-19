@@ -1,6 +1,6 @@
 import './HomePage.scss';
 import Map from '../../views/map/Map';
-import PoiList from '../../views/poiList/PoiList';
+import ActionArea from '../../views/actionArea/ActionArea';
 
 function HomePage () {
     return (
@@ -8,8 +8,8 @@ function HomePage () {
             <div className="home-page--map-box">
                 <Map />
             </div>
-            <div className="home-page--poi-list-box">
-                <PoiList />
+            <div className="home-page--action-area">
+                <ActionArea />
             </div>
         </div>
     );
