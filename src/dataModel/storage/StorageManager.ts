@@ -22,7 +22,7 @@ interface StorageManager {
     /**
      * Returns a promise that resolves to the entity with the given key.
      * 
-     * May resolve instanteously if the entity is present locally or cause to wait for fetching
+     * May resolve instantenously if the entity is present locally or cause to wait for fetching
      * all the needed resources. The promise will be rejected if the entity is not found.
      * 
      * @param key Key of the entity to retrieve.
