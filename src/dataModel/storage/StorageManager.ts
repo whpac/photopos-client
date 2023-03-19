@@ -23,11 +23,11 @@ interface StorageManager {
      * Returns a promise that resolves to the entity with the given key.
      * 
      * May resolve instantenously if the entity is present locally or cause to wait for fetching
-     * all the needed resources. The promise will be rejected if the entity is not found.
+     * all the needed resources. If the entity is not present, null is returned.
      * 
      * @param key Key of the entity to retrieve.
      */
-    retrieve(key: StorageId): Promise<StorageObject>;
+    retrieve(key: StorageId): Promise<StorageObject | null>;
 
     /**
      * Returns a queue of pending storage jobs.
