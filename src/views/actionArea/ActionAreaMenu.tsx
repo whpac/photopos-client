@@ -1,20 +1,20 @@
 import './ActionAreaMenu.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import ActionAreaMenuButton from './ActionAreaMenuButton';
 import { useState } from 'react';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 type ActionAreaMenuProps = {
     onMenuItemChange?: (key: string) => void,
+    menuItems: ActionAreaMenuButtonDefinition[],
+};
+type ActionAreaMenuButtonDefinition = {
+    key: string,
+    title: string,
+    icon: IconDefinition,
 };
 
-function ActionAreaMenu({ onMenuItemChange }: ActionAreaMenuProps) {
-    const menuItems = [
-        {key: 'nearby', title: 'Show nearby', icon: icon({name: 'map', style: 'regular'})},
-        {key: 'filter', title: 'Filter places', icon: icon({name: 'filter', style: 'solid'})},
-        {key: 'details', title: 'Selected place', icon: icon({name: 'location-dot', style: 'solid'})},
-    ];
-
+function ActionAreaMenu({ onMenuItemChange, menuItems }: ActionAreaMenuProps) {
     const [selectedItem, setSelectedItem] = useState('nearby');
 
     let onMenuItemClick = (key: string) => {
