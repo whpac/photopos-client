@@ -16,7 +16,12 @@ class MapController {
     }
 
     release(): void {
-        this.detachMapEventHandler('moveend');
+        for(const marker of this.markers) {
+            this.removeMarker(marker);
+        }
+        for(const event of this.mapEventHandlers.keys()) {
+            this.detachMapEventHandler(event);
+        }
         console.log('Released map controller');
     }
 
@@ -68,6 +73,8 @@ class MapController {
         const bound = this.map.getBounds();
         const ne = bound.getNorthEast();
         const sw = bound.getSouthWest();
+
+        // TODO: Add some margin to ensure the pin is completely invisible
 
         for(const marker of this.markers) {
             const coords = marker.getLatLng();
