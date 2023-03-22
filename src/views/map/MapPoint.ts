@@ -11,6 +11,13 @@ class MapPoint {
         this.lat = latitude;
         this.lng = longitude;
     }
+
+    /**
+     * Returns a hash code for the point. It's used to compare points as values.
+     */
+    public getHashCode(): string {
+        return `${this.lat};${this.lng}`;
+    }
 }
 
 export default MapPoint;

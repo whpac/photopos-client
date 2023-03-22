@@ -1,28 +1,30 @@
-import L, { LatLngExpression, LeafletEventHandlerFn } from 'leaflet';
+import L, { LeafletEventHandlerFn } from 'leaflet';
+import MapAdapter from './MapAdapter';
+import MapPoint from './MapPoint';
 
 class MapController {
     private map: L.Map;
     private mapEventHandlers: Map<string, LeafletEventHandlerFn>;
-    private markers: Set<L.Marker>;
+    private markers: Map<string, L.Marker>;
+    protected adapter: MapAdapter;
 
-    constructor(map: L.Map) {
+    constructor(map: L.Map, adapter: MapAdapter) {
         this.map = map;
         this.mapEventHandlers = new Map();
-        this.markers = new Set();
+        this.markers = new Map();
+        this.adapter = adapter;
 
         this.attachMapEventHandler('moveend', this.onMapMoved);
-
-        console.log('Created map controller');
+        this.updateMapView();
     }
 
     release(): void {
-        for(const marker of this.markers) {
-            this.removeMarker(marker);
+        for(const markerHash of this.markers.keys()) {
+            this.removeMarker(markerHash);
         }
         for(const event of this.mapEventHandlers.keys()) {
             this.detachMapEventHandler(event);
         }
-        console.log('Released map controller');
     }
 
     /**
@@ -48,38 +50,67 @@ class MapController {
     }
 
     private onMapMoved(): void {
+        this.updateMapView();
+    }
+
+    /**
+     * Updates the map view by adding/removing markers.
+     */
+    private async updateMapView(): Promise<void> {
         const bounds = this.map.getBounds();
+        const bNE = bounds.getNorthEast();
+        const bSW = bounds.getSouthWest();
         this.displayBounds(bounds);
 
-        // TODO: Load points from the adapter
-        // TODO: Display those points on the map provided they weren't displayed before
-        this.displayMarker(bounds.getCenter());
+        const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
+        for(const point of adapterPoints) {
+            if(!bounds.contains(point)) continue; // Skip points that are out of bounds
+            this.displayMarker(point);
+        }
+
         this.removeOutOfBoundsMarkers();
     }
 
-    private displayMarker(coords: LatLngExpression): L.Marker {
-        const marker = L.marker(coords);
-        this.markers.add(marker);
+    /**
+     * Adds a marker to the map at the specified point.
+     * If a marker at the coords already exists, it will be returned.
+     * @param coords The coordinates of the marker to display
+     * @returns The marker that was displayed
+     */
+    private displayMarker(coords: MapPoint): L.Marker {
+        const markerHash = coords.getHashCode();
+        let marker = this.markers.get(markerHash);
+        if(marker) return marker; // Marker already exists
+
+        marker = L.marker(coords);
+        this.markers.set(markerHash, marker);
         marker.addTo(this.map);
         return marker;
     }
 
-    private removeMarker(marker: L.Marker): void {
-        this.markers.delete(marker);
+    /**
+     * Removes a marker from the map.
+     * @param markerHash The hash of the marker to remove.
+     */
+    private removeMarker(markerHash: string): void {
+        const marker = this.markers.get(markerHash);
+        if(!marker) return; // There was no marker with such hash
+
+        this.markers.delete(markerHash);
         marker.remove();
     }
 
+    /**
+     * Removes all markers that are out of bounds.
+     */
     private removeOutOfBoundsMarkers(): void {
         const bound = this.map.getBounds();
-        const ne = bound.getNorthEast();
-        const sw = bound.getSouthWest();
-
         // TODO: Add some margin to ensure the pin is completely invisible
 
-        for(const marker of this.markers) {
+        for(const [markerHash, marker] of this.markers) {
             const coords = marker.getLatLng();
-            if(coords.lat > ne.lat || coords.lat < sw.lat || coords.lng > ne.lng || coords.lng < sw.lng) {
-                this.removeMarker(marker);
+            if(!bound.contains(coords)) {
+                this.removeMarker(markerHash);
             }
         }
     }
