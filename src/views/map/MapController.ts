@@ -3,6 +3,9 @@ import MapAdapter from './MapAdapter';
 import MapPoint from './MapPoint';
 
 class MapController {
+    // The relative thickness of the margin to add to the map bounds (in both directions)
+    private readonly MAP_MARGIN = [0.03, 0.02] as const;
+
     private map: L.Map;
     private mapEventHandlers: Map<string, LeafletEventHandlerFn>;
     private markers: Map<string, L.Marker>;
@@ -18,6 +21,9 @@ class MapController {
         this.updateMapView();
     }
 
+    /**
+     * Clean up the map controller.
+     */
     release(): void {
         for(const markerHash of this.markers.keys()) {
             this.removeMarker(markerHash);
@@ -58,17 +64,18 @@ class MapController {
      */
     private async updateMapView(): Promise<void> {
         const bounds = this.map.getBounds();
-        const bNE = bounds.getNorthEast();
-        const bSW = bounds.getSouthWest();
-        this.displayBounds(bounds);
+        this.displayBounds(bounds); // TODO: Remove this debug line
+        const marginBounds = this.makeMarginBounds(bounds, this.MAP_MARGIN);
+        const bNE = marginBounds.getNorthEast();
+        const bSW = marginBounds.getSouthWest();
 
         const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
         for(const point of adapterPoints) {
-            if(!bounds.contains(point)) continue; // Skip points that are out of bounds
+            if(!marginBounds.contains(point)) continue; // Skip points that are out of bounds
             this.displayMarker(point);
         }
 
-        this.removeOutOfBoundsMarkers();
+        this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
     }
 
     /**
@@ -102,17 +109,61 @@ class MapController {
 
     /**
      * Removes all markers that are out of bounds.
+     * @param margin The margin to add to the bounds (relative to the map size)
+     * @param marginY The margin to add to the bounds (relative to the map size) on the Y axis
+     * @param marginX The margin to add to the bounds (relative to the map size) on the X axis
      */
-    private removeOutOfBoundsMarkers(): void {
-        const bound = this.map.getBounds();
-        // TODO: Add some margin to ensure the pin is completely invisible
+    private removeOutOfBoundsMarkers(): void;
+    private removeOutOfBoundsMarkers(margin: number): void;
+    private removeOutOfBoundsMarkers(margin: readonly [number, number]): void;
+    private removeOutOfBoundsMarkers(marginY?: number, marginX?: number): void;
+    private removeOutOfBoundsMarkers(marginY?: number | readonly [number, number], marginX?: number): void {
+        if(typeof marginY === 'number' || marginY === undefined) {
+            marginY ??= 0;
+            marginX ??= marginY;
+        } else {
+            marginX = marginY[1];
+            marginY = marginY[0];
+        }
+
+        const bounds = this.map.getBounds();
+        const marginBounds = this.makeMarginBounds(bounds, marginY, marginX);
 
         for(const [markerHash, marker] of this.markers) {
             const coords = marker.getLatLng();
-            if(!bound.contains(coords)) {
+            if(!marginBounds.contains(coords)) {
                 this.removeMarker(markerHash);
             }
         }
+    }
+
+    /**
+     * Extends the bounds by the specified relative margin.
+     * @param bounds The bounds to extend
+     * @param margin How much to extend the bounds (relative to the map size) on both axes
+     * @param marginY How much to extend the bounds (relative to the map size) on the Y axis
+     * @param marginX How much to extend the bounds (relative to the map size) on the X axis
+     */
+    private makeMarginBounds(bounds: L.LatLngBounds, margin: number): L.LatLngBounds;
+    private makeMarginBounds(bounds: L.LatLngBounds, margin: readonly [number, number]): L.LatLngBounds;
+    private makeMarginBounds(bounds: L.LatLngBounds, marginY: number, marginX: number): L.LatLngBounds;
+    private makeMarginBounds(bounds: L.LatLngBounds, marginY: number | readonly [number, number], marginX?: number): L.LatLngBounds {
+        if(typeof marginY === 'number') {
+            marginX ??= marginY;
+        } else {
+            marginX = marginY[1];
+            marginY = marginY[0];
+        }
+
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        const marginBounds = L.latLngBounds(
+            [sw.lat - marginY, sw.lng - marginX],
+            [ne.lat + marginY, ne.lng + marginX]
+        );
+
+        return marginBounds;
     }
 
     // TODO: Remove this debug function
