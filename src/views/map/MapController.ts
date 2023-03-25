@@ -1,6 +1,8 @@
 import L, { LeafletEventHandlerFn } from 'leaflet';
 import MapAdapter from './MapAdapter';
+import MapMarker from './MapMarker';
 import MapPoint from './MapPoint';
+import MapPointsListener from './MapPointsListener';
 
 class MapController {
     // The relative thickness of the margin to add to the map bounds (in both directions)
@@ -8,14 +10,18 @@ class MapController {
 
     private map: L.Map;
     private mapEventHandlers: Map<string, LeafletEventHandlerFn>;
-    private markers: Map<string, L.Marker>;
+    private markers: Map<string, MapMarker>;
+    private points: Set<MapPoint>;
     protected adapter: MapAdapter;
+    protected pointEventListeners: Set<MapPointsListener>;
 
     constructor(map: L.Map, adapter: MapAdapter) {
         this.map = map;
         this.mapEventHandlers = new Map();
         this.markers = new Map();
+        this.points = new Set();
         this.adapter = adapter;
+        this.pointEventListeners = new Set();
 
         this.attachMapEventHandler('moveend', this.onMapMoved);
         this.updateMapView();
@@ -76,6 +82,7 @@ class MapController {
         }
 
         this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
+        this.firePointChangeEvents();
     }
 
     /**
@@ -84,12 +91,13 @@ class MapController {
      * @param coords The coordinates of the marker to display
      * @returns The marker that was displayed
      */
-    private displayMarker(coords: MapPoint): L.Marker {
+    private displayMarker(coords: MapPoint): MapMarker {
         const markerHash = coords.getHashCode();
         let marker = this.markers.get(markerHash);
         if(marker) return marker; // Marker already exists
 
-        marker = L.marker(coords);
+        this.points.add(coords);
+        marker = new MapMarker(coords);
         this.markers.set(markerHash, marker);
         marker.addTo(this.map);
         return marker;
@@ -103,6 +111,8 @@ class MapController {
         const marker = this.markers.get(markerHash);
         if(!marker) return; // There was no marker with such hash
 
+        const point = marker.getMapPoint();
+        this.points.delete(point);
         this.markers.delete(markerHash);
         marker.remove();
     }
@@ -164,6 +174,32 @@ class MapController {
         );
 
         return marginBounds;
+    }
+
+    /**
+     * Fires all point change events to all listeners.
+     */
+    private firePointChangeEvents(): void {
+        const points = this.points;
+        for(const listener of this.pointEventListeners) {
+            listener.fireMapPointsChanged(points);
+        }
+    }
+
+    /**
+     * Adds a listener for point change events.
+     * @param listener The listener to add
+     */
+    public addPointEventListener(listener: MapPointsListener): void {
+        this.pointEventListeners.add(listener);
+    }
+
+    /**
+     * Removes a listener for point change events.
+     * @param listener The listener to remove
+     */
+    public removePointEventListener(listener: MapPointsListener): void {
+        this.pointEventListeners.delete(listener);
     }
 
     // TODO: Remove this debug function
