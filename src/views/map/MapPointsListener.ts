@@ -24,7 +24,6 @@ class MapPointsListener {
         this.onMapPointsChanged = handler;
         if(this.lastMapPoints) {
             this.fireMapPointsChanged(this.lastMapPoints);
-            this.lastMapPoints = undefined;
         }
     }
 
@@ -33,11 +32,8 @@ class MapPointsListener {
      * @param mapPoints All the map points that are currently in the map.
      */
     fireMapPointsChanged(mapPoints: Iterable<MapPoint>): void {
-        if(this.onMapPointsChanged) {
-            this.onMapPointsChanged(mapPoints);
-        } else {
-            this.lastMapPoints = mapPoints;
-        }
+        this.onMapPointsChanged?.(mapPoints);
+        this.lastMapPoints = mapPoints;
     }
 }
 
