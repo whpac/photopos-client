@@ -3,21 +3,14 @@ import { MapContainer, TileLayer, ZoomControl, Marker, Popup, AttributionControl
 import { useEffect, useMemo, useState } from 'react';
 import MapController from './MapController';
 import MapAdapter from './MapAdapter';
-import MapPoint from './MapPoint';
+import MapPointsListener from './MapPointsListener';
 
-class DummyMapAdapter implements MapAdapter {
+type MapProps = {
+    adapter: MapAdapter;
+    eventListener?: MapPointsListener;
+};
 
-    async getPoints(latMin: number, latMax: number, lngMin: number, lngMax: number): Promise<MapPoint[]> {
-        return [
-            new MapPoint(52.4, 16.9),
-            new MapPoint(52.3, 17.2),
-            new MapPoint(52.5, 17.1),
-            new MapPoint(52.6, 16.8),
-        ];
-    }
-}
-
-function Map() {
+function Map({ adapter, eventListener }: MapProps) {
     const [map, setMap] = useState<L.Map | null>(null);
 
     const displayMap = useMemo(
@@ -43,7 +36,11 @@ function Map() {
     useEffect(() => {
         if(map === null) return;
 
-        const controller = new MapController(map, new DummyMapAdapter());
+        const controller = new MapController(map, adapter);
+        if (eventListener) {
+            controller.addPointEventListener(eventListener);
+        }
+
         return () => controller.release();
     }, [map]);
 
