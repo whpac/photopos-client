@@ -99,8 +99,8 @@ class MapController {
      * @returns Whether the map contents have changed
      */
     private hasMapChanged(addedPoints: Set<MapPoint>, removedPoints: Set<MapPoint>): boolean {
-        if(addedPoints.size != removedPoints.size) return true;
-        if(addedPoints.size == 0 && removedPoints.size == 0) return false;
+        if(addedPoints.size !== removedPoints.size) return true;
+        if(addedPoints.size === 0 && removedPoints.size === 0) return false;
 
         for(const point of addedPoints) {
             if(!removedPoints.has(point)) return true;

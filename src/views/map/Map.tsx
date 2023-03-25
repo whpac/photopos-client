@@ -42,7 +42,7 @@ function Map({ adapter, eventListener }: MapProps) {
         }
 
         return () => controller.release();
-    }, [map]);
+    }, [map, adapter, eventListener]);
 
     return (
         <>
