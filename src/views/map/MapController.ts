@@ -76,29 +76,47 @@ class MapController {
         const bSW = marginBounds.getSouthWest();
 
         const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
-        let addedCount = 0;
+
+        const addedPoints = new Set<MapPoint>();
         for(const point of adapterPoints) {
             if(!marginBounds.contains(point)) continue; // Skip points that are out of bounds
-            this.displayMarker(point);
-            addedCount++;
+            const marker = this.displayMarker(point);
+
+            if(marker == null) continue; // Skip points that are already present
+            addedPoints.add(point);
         }
 
-        const removedCount = this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
-        if(addedCount > 0 || removedCount > 0) {
+        const removedPoints = this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
+        if(this.hasMapChanged(addedPoints, removedPoints)) {
             this.firePointChangeEvents();
         }
     }
 
     /**
-     * Adds a marker to the map at the specified point.
-     * If a marker at the coords already exists, it will be returned.
-     * @param coords The coordinates of the marker to display
-     * @returns The marker that was displayed
+     * Based on the points that were added and removed, checks if the map contents have changed.
+     * @param addedPoints The points that were added to the map
+     * @param removedPoints The points that were removed from the map
+     * @returns Whether the map contents have changed
      */
-    private displayMarker(coords: MapPoint): MapMarker {
+    private hasMapChanged(addedPoints: Set<MapPoint>, removedPoints: Set<MapPoint>): boolean {
+        if(addedPoints.size != removedPoints.size) return true;
+        if(addedPoints.size == 0 && removedPoints.size == 0) return false;
+
+        for(const point of addedPoints) {
+            if(!removedPoints.has(point)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Adds a marker to the map at the specified point, if it doesn't already exist.
+     * @param coords The coordinates of the marker to display
+     * @returns The marker that was displayed or null if nothing was added
+     */
+    private displayMarker(coords: MapPoint): MapMarker | null {
         const markerHash = coords.getHashCode();
         let marker = this.markers.get(markerHash);
-        if(marker) return marker; // Marker already exists
+        if(marker) return null; // Marker already exists
 
         this.points.add(coords);
         marker = new MapMarker(coords);
@@ -126,13 +144,13 @@ class MapController {
      * @param margin The margin to add to the bounds (relative to the map size)
      * @param marginY The margin to add to the bounds (relative to the map size) on the Y axis
      * @param marginX The margin to add to the bounds (relative to the map size) on the X axis
-     * @returns The number of markers that were removed
+     * @returns The set of points that were removed
      */
-    private removeOutOfBoundsMarkers(): number;
-    private removeOutOfBoundsMarkers(margin: number): number;
-    private removeOutOfBoundsMarkers(margin: readonly [number, number]): number;
-    private removeOutOfBoundsMarkers(marginY?: number, marginX?: number): number;
-    private removeOutOfBoundsMarkers(marginY?: number | readonly [number, number], marginX?: number): number {
+    private removeOutOfBoundsMarkers(): Set<MapPoint>;
+    private removeOutOfBoundsMarkers(margin: number): Set<MapPoint>;
+    private removeOutOfBoundsMarkers(margin: readonly [number, number]): Set<MapPoint>;
+    private removeOutOfBoundsMarkers(marginY?: number, marginX?: number): Set<MapPoint>;
+    private removeOutOfBoundsMarkers(marginY?: number | readonly [number, number], marginX?: number): Set<MapPoint> {
         if(typeof marginY === 'number' || marginY === undefined) {
             marginY ??= 0;
             marginX ??= marginY;
@@ -144,15 +162,15 @@ class MapController {
         const bounds = this.map.getBounds();
         const marginBounds = this.makeMarginBounds(bounds, marginY, marginX);
 
-        let removedCount = 0;
+        const removedPoints = new Set<MapPoint>();
         for(const [markerHash, marker] of this.markers) {
             const coords = marker.getLatLng();
             if(!marginBounds.contains(coords)) {
                 this.removeMarker(markerHash);
-                removedCount++;
+                removedPoints.add(marker.getMapPoint());
             }
         }
-        return removedCount;
+        return removedPoints;
     }
 
     /**
