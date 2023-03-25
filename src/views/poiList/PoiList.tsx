@@ -12,9 +12,9 @@ function PoiList({ mapListener }: PoiListProps){
 
     useEffect(() => {
         if(mapListener){
-            mapListener.onMapPointsChanged = (points) => {
+            mapListener.setOnMapPointsChanged((points) => {
                 setPoints([...points])
-            }
+            });
         }
     }, [mapListener]);
 
