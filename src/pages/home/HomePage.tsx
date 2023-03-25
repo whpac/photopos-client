@@ -6,9 +6,6 @@ import MapAdapter from '../../views/map/MapAdapter';
 import MapPoint from '../../views/map/MapPoint';
 
 let mapEventListener = new MapPointsListener();
-mapEventListener.onMapPointsChanged = (points) => {
-    console.log([...points]);
-}
 
 class DummyMapAdapter implements MapAdapter {
 
@@ -29,7 +26,7 @@ function HomePage () {
                 <Map eventListener={mapEventListener} adapter={new DummyMapAdapter()} />
             </div>
             <div className="home-page--action-area">
-                <ActionArea />
+                <ActionArea mapListener={mapEventListener} />
             </div>
         </div>
     );

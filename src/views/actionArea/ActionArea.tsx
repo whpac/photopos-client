@@ -4,14 +4,19 @@ import ActionAreaMenu from './ActionAreaMenu';
 import { useState } from 'react';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import ActionAreaContent from './ActionAreaContent';
+import MapPointsListener from '../map/MapPointsListener';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
-function ActionArea(){
+type ActionAreaProps = {
+    mapListener?: MapPointsListener;
+}
+
+function ActionArea({ mapListener }: ActionAreaProps){
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
 
     const panels = {
-        nearby: <PoiList />,
+        nearby: <PoiList mapListener={mapListener} />,
         filter: <ActionAreaContent title="Filter places"><span>Filter options here</span></ActionAreaContent>,
         details: <ActionAreaContent title="Details"><span>Details here</span></ActionAreaContent>,
     };
