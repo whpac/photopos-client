@@ -76,13 +76,17 @@ class MapController {
         const bSW = marginBounds.getSouthWest();
 
         const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
+        let addedCount = 0;
         for(const point of adapterPoints) {
             if(!marginBounds.contains(point)) continue; // Skip points that are out of bounds
             this.displayMarker(point);
+            addedCount++;
         }
 
-        this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
-        this.firePointChangeEvents();
+        const removedCount = this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
+        if(addedCount > 0 || removedCount > 0) {
+            this.firePointChangeEvents();
+        }
     }
 
     /**
@@ -122,12 +126,13 @@ class MapController {
      * @param margin The margin to add to the bounds (relative to the map size)
      * @param marginY The margin to add to the bounds (relative to the map size) on the Y axis
      * @param marginX The margin to add to the bounds (relative to the map size) on the X axis
+     * @returns The number of markers that were removed
      */
-    private removeOutOfBoundsMarkers(): void;
-    private removeOutOfBoundsMarkers(margin: number): void;
-    private removeOutOfBoundsMarkers(margin: readonly [number, number]): void;
-    private removeOutOfBoundsMarkers(marginY?: number, marginX?: number): void;
-    private removeOutOfBoundsMarkers(marginY?: number | readonly [number, number], marginX?: number): void {
+    private removeOutOfBoundsMarkers(): number;
+    private removeOutOfBoundsMarkers(margin: number): number;
+    private removeOutOfBoundsMarkers(margin: readonly [number, number]): number;
+    private removeOutOfBoundsMarkers(marginY?: number, marginX?: number): number;
+    private removeOutOfBoundsMarkers(marginY?: number | readonly [number, number], marginX?: number): number {
         if(typeof marginY === 'number' || marginY === undefined) {
             marginY ??= 0;
             marginX ??= marginY;
@@ -139,12 +144,15 @@ class MapController {
         const bounds = this.map.getBounds();
         const marginBounds = this.makeMarginBounds(bounds, marginY, marginX);
 
+        let removedCount = 0;
         for(const [markerHash, marker] of this.markers) {
             const coords = marker.getLatLng();
             if(!marginBounds.contains(coords)) {
                 this.removeMarker(markerHash);
+                removedCount++;
             }
         }
+        return removedCount;
     }
 
     /**
