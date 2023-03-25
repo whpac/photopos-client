@@ -1,0 +1,25 @@
+@use '../../styles/colors' as colors;
+
+$poi-list-item-hover-bg: transparentize(colors.$black, 0.95);
+$poi-list-item-active-bg: transparentize(colors.$blue-900, 0.85);
+
+.poi-list-item--button {
+    display: block;
+    width: 100%;
+    appearance: none;
+    padding: 8px 16px;
+    border: none;
+    background-color: transparent;
+
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: $poi-list-item-hover-bg;
+    }
+    &:active {
+        background-color: $poi-list-item-active-bg;
+    }
+}
