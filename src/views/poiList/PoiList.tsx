@@ -20,8 +20,14 @@ function PoiList({ mapListener }: PoiListProps){
         }
     }, [mapListener]);
 
+    const referencePoint = new MapPoint(52.4, 16.9);
     const itemsList = points.map((point) => {
-        return <PoiListItem point={point} key={point.getHashCode()} />
+        return (
+            <PoiListItem
+                point={point}
+                distance={referencePoint.distanceTo(point)}
+                key={point.getHashCode()} />
+        )
     });
 
     return (
