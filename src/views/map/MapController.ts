@@ -122,6 +122,7 @@ class MapController {
         marker = new MapMarker(coords);
         this.markers.set(markerHash, marker);
         marker.addTo(this.map);
+        marker.on('click', (() => this.firePointClickedEvent(marker!.getMapPoint())).bind(this));
         return marker;
     }
 
@@ -213,6 +214,16 @@ class MapController {
         const points = this.points;
         for(const listener of this.pointEventListeners) {
             listener.fireMapPointsChanged(points);
+        }
+    }
+
+    /**
+     * Fires point click event to all listeners.
+     * @param point The point that was clicked
+     */
+    private firePointClickedEvent(point: MapPoint): void {
+        for(const listener of this.pointEventListeners) {
+            listener.fireMapPointClicked(point);
         }
     }
 
