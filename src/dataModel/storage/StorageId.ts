@@ -13,6 +13,10 @@ class StorageId {
         this.entityType = entityType;
         this.entityId = entityId;
     }
+
+    public toString(): string {
+        return `${this.entityType}:${this.entityId}`;
+    }
 }
 
 export default StorageId;
