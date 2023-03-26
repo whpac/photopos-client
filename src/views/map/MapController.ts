@@ -6,7 +6,7 @@ import MapPointsListener from './MapPointsListener';
 
 class MapController {
     // The relative thickness of the margin to add to the map bounds (in both directions)
-    private readonly MAP_MARGIN = [0.03, 0.02] as const;
+    private readonly MAP_MARGIN = [0.06, 0.02] as const;
 
     private map: L.Map;
     private mapEventHandlers: Map<string, LeafletEventHandlerFn>;
@@ -193,6 +193,10 @@ class MapController {
 
         const sw = bounds.getSouthWest();
         const ne = bounds.getNorthEast();
+        const height = bounds.getNorth() - bounds.getSouth();
+        const width = bounds.getEast() - bounds.getWest();
+        marginY *= height;
+        marginX *= width;
 
         const marginBounds = L.latLngBounds(
             [sw.lat - marginY, sw.lng - marginX],
