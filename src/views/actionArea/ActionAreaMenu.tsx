@@ -7,6 +7,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 type ActionAreaMenuProps = {
     onMenuItemChange?: (key: string) => void,
     menuItems: ActionAreaMenuButtonDefinition[],
+    selectedItem: string
 };
 type ActionAreaMenuButtonDefinition = {
     key: string,
@@ -14,11 +15,8 @@ type ActionAreaMenuButtonDefinition = {
     icon: IconDefinition,
 };
 
-function ActionAreaMenu({ onMenuItemChange, menuItems }: ActionAreaMenuProps) {
-    const [selectedItem, setSelectedItem] = useState('nearby');
-
+function ActionAreaMenu({ onMenuItemChange, menuItems, selectedItem }: ActionAreaMenuProps) {
     let onMenuItemClick = (key: string) => {
-        setSelectedItem(key);
         onMenuItemChange?.(key);
     };
 

@@ -10,7 +10,7 @@ let mapAdapter = new StorageMapAdapter(
     new LocalStorageManager()
 );
 
-function HomePage () {
+function HomePage() {
     return (
         <div className="home-page--container">
             <div className="home-page--map-box">

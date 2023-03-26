@@ -1,5 +1,5 @@
 import './PoiList.scss';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import ActionAreaContent from '../actionArea/ActionAreaContent';
 import MapPoint from '../map/MapPoint';
 import MapPointsListener from '../map/MapPointsListener';
@@ -13,7 +13,7 @@ type PoiListProps = {
 function PoiList({ mapListener, referencePoint }: PoiListProps){
     const [points, setPoints] = useState<MapPoint[]>([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if(mapListener){
             let comparer: (a: MapPoint, b: MapPoint) => number;
             if(referencePoint === undefined){

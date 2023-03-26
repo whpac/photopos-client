@@ -6,6 +6,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import ActionAreaContent from './ActionAreaContent';
 import MapPointsListener from '../map/MapPointsListener';
 import Point from '../../dataModel/entities/Point';
+import MapPoint from '../map/MapPoint';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
@@ -15,6 +16,7 @@ type ActionAreaProps = {
 
 function ActionArea({ mapListener }: ActionAreaProps){
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
+    const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
 
     // TODO: get from GPS
     const referencePoint = new Point(52.4, 16.9);
@@ -35,13 +37,26 @@ function ActionArea({ mapListener }: ActionAreaProps){
             setVisiblePanel(key as PanelKey);
     };
 
+    mapListener?.setOnMapPointClicked((point) => {
+        if(point !== selectedPoint){
+            setVisiblePanel('details');
+            setSelectedPoint(point);
+        }else{
+            setVisiblePanel('nearby');
+            setSelectedPoint(null);
+        }
+    });
+
     return (
         <div className="action-area">
             <div className="action-area--content">
                 {panels[visiblePanel]}
             </div>
             <div className="action-area--menu">
-                <ActionAreaMenu onMenuItemChange={onMenuItemChange} menuItems={menuItems} />
+                <ActionAreaMenu
+                    onMenuItemChange={onMenuItemChange}
+                    menuItems={menuItems}
+                    selectedItem={visiblePanel} />
             </div>
         </div>
     );
