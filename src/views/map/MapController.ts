@@ -70,7 +70,6 @@ class MapController {
      */
     private async updateMapView(): Promise<void> {
         const bounds = this.map.getBounds();
-        this.displayBounds(bounds); // TODO: Remove this debug line
         const marginBounds = this.makeMarginBounds(bounds, this.MAP_MARGIN);
         const bNE = marginBounds.getNorthEast();
         const bSW = marginBounds.getSouthWest();
@@ -246,27 +245,6 @@ class MapController {
      */
     public removePointEventListener(listener: MapPointsListener): void {
         this.pointEventListeners.delete(listener);
-    }
-
-    // TODO: Remove this debug function
-    private displayBounds(bounds: L.LatLngBounds) {
-        let diag = document.getElementById('diag');
-        if(!diag) {
-            diag = document.createElement('div');
-            diag.id = 'diag';
-            diag.style.position = 'absolute';
-            diag.style.top = '0';
-            diag.style.left = '0';
-            diag.style.zIndex = '1000';
-            diag.style.backgroundColor = 'rgba(255,255,255,0.7)';
-            diag.style.padding = '2px 6px';
-            diag.style.fontSize = '10px';
-            document.body.appendChild(diag);
-        }
-
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
-        diag.innerHTML = `<b>Bounds:</b> (${sw.lat.toFixed(6)} N, ${sw.lng.toFixed(6)} E) - (${ne.lat.toFixed(6)} N, ${ne.lng.toFixed(6)} E)`;
     }
 }
 
