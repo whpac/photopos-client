@@ -3,6 +3,7 @@
 .home-page--container {
     display: grid;
     grid-template-columns: 1fr 360px;
+    grid-template-rows: 100%;
 
     .home-page--map-box {
         grid-row: 1;

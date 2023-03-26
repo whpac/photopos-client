@@ -7,7 +7,7 @@ $content-shadow1: transparentize(colors.$blue-100, 0.5);
 $content-shadow2: rgba(0, 0, 0, 0.07);
 
 .photopos-container {
-    min-height: 100vh;
+    height: 100vh;
     box-sizing: border-box;
     padding: 24px;
     background-color: $page-background;
@@ -23,7 +23,7 @@ $content-shadow2: rgba(0, 0, 0, 0.07);
         border-radius: 20px;
         background-color: colors.$white;
         flex-grow: 1;
-        overflow: auto;
+        overflow: hidden;
         border: 1px solid $content-border;
         box-shadow: 0 0 4px 1px $content-shadow1, 0 1px 4px 1px $content-shadow2;
         

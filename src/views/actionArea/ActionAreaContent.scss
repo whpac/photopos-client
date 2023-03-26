@@ -1,1 +1,12 @@
-.action-area-content--header {margin: 20px 24px}
+.action-area-content {
+    display: flex;
+    flex-direction: column;
+
+    .action-area-content--header {
+        margin: 20px 24px;
+    }
+    
+    .action-area-content--body {
+        overflow-y: auto;
+    }
+}

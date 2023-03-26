@@ -1,4 +1,5 @@
 @use '../../styles/colors' as colors;
+@use '../../styles/layout' as layout;
 
 $action-area-border: #e0e0e0;
 $action-area-shadow: transparentize(colors.$black, 0.85);
@@ -22,6 +23,8 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
         flex-grow: 1;
         background: $action-area-content-bg;
         border-right: 1px solid colors.$grayE;
+
+        @include layout.stretch-contents;
     }
 
     .action-area--menu {
