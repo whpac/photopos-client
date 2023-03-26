@@ -40,9 +40,17 @@ function PoiList({ mapListener, referencePoint }: PoiListProps){
 
     return (
         <ActionAreaContent title="Nearby">
-            <ul className="poi-list">
-                {itemsList}
-            </ul>
+            {itemsList.length > 0 ? (
+                    <ul className="poi-list">
+                        {itemsList}
+                    </ul>
+                ) : (
+                    <div className="poi-list--empty">
+                        <p>No places found.</p>
+                        <p>Zoom out the map or apply weaker filtering.</p>
+                    </div>
+                )
+            }
         </ActionAreaContent>
     );
 }
