@@ -122,7 +122,7 @@ class MapController {
         marker = new MapMarker(coords);
         this.markers.set(markerHash, marker);
         marker.addTo(this.map);
-        marker.on('click', (() => this.firePointClickedEvent(marker!.getMapPoint())).bind(this));
+        marker.on('click', () => this.firePointClickedEvent(marker!.getMapPoint()));
         return marker;
     }
 
