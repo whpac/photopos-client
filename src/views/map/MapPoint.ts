@@ -22,6 +22,11 @@ class MapPoint {
         return `${this.lat};${this.lng}`;
     }
 
+    /**
+     * Compares two points by their coordinates.
+     * @param point The point to compare to.
+     * @returns Where the points are equal.
+     */
     public valueEquals(point: MapPoint | null | undefined): boolean {
         if(point === undefined || point === null) return false;
         return this.lat === point.lat && this.lng === point.lng;
