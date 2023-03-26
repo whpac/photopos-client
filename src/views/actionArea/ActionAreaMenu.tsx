@@ -1,7 +1,6 @@
 import './ActionAreaMenu.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ActionAreaMenuButton from './ActionAreaMenuButton';
-import { useState } from 'react';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 type ActionAreaMenuProps = {
