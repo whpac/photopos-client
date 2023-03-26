@@ -29,8 +29,14 @@ function ActionArea({ mapListener }: ActionAreaProps){
     const menuItems = [
         {key: 'nearby', title: 'Show nearby', icon: icon({name: 'map', style: 'regular'})},
         {key: 'filter', title: 'Filter places', icon: icon({name: 'filter', style: 'solid'})},
-        {key: 'details', title: 'Selected place', icon: icon({name: 'location-dot', style: 'solid'})},
     ];
+    
+    // The "Details" view should be only available when a point is selected
+    if(selectedPoint !== null) {
+        menuItems.push(
+            {key: 'details', title: 'Selected place', icon: icon({name: 'location-dot', style: 'solid'})}
+        );
+    }
 
     let onMenuItemChange = (key: string) => {
         if(key in panels)
@@ -38,7 +44,7 @@ function ActionArea({ mapListener }: ActionAreaProps){
     };
 
     mapListener?.setOnMapPointClicked((point) => {
-        if(point !== selectedPoint){
+        if(!point.valueEquals(selectedPoint)){
             setVisiblePanel('details');
             setSelectedPoint(point);
         }else{

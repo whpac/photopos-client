@@ -22,6 +22,11 @@ class MapPoint {
         return `${this.lat};${this.lng}`;
     }
 
+    public valueEquals(point: MapPoint | null | undefined): boolean {
+        if(point === undefined || point === null) return false;
+        return this.lat === point.lat && this.lng === point.lng;
+    }
+
     /**
      * Calculates the distance to another point.
      * Results are cached.
