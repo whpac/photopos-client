@@ -1,6 +1,5 @@
 import './PoiListItem.scss';
 import MapPoint from '../map/MapPoint';
-import Point from '../../dataModel/entities/Point';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
@@ -23,8 +22,8 @@ function PoiListItem({ point, distance }: PoiListItemProps){
     let title: JSX.Element;
     let coordsOrDistance: JSX.Element;
 
-    if ((point as Point).label){
-        title = (<span className="poi-list-item--title">{(point as Point).label}</span>);
+    if (point.hasLabel()){
+        title = (<span className="poi-list-item--title">{point.getLabel()}</span>);
     } else {
         title = (<span className="poi-list-item--title poi-list-item--title__notitle">(Unnamed Point)</span>);
     }

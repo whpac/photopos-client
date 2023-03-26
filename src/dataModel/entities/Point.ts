@@ -28,6 +28,14 @@ class Point extends MapPoint implements StorageObject {
             raw.label as string | null
         );
     }
+
+    public override hasLabel(): boolean {
+        return this.label !== null;
+    }
+
+    public override getLabel(): string {
+        return this.label ?? '';
+    }
 }
 
 export default Point;

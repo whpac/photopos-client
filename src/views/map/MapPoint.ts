@@ -66,6 +66,22 @@ class MapPoint {
         this.distances.set(point, distance);
         return distance;
     }
+
+    /**
+     * Returns the label of the point or empty string if none specified.
+     * @returns The label of the point.
+     */
+    public getLabel(): string {
+        return '';
+    }
+
+    /**
+     * Tells whether the point has a label.
+     * @returns Whether the point has a label.
+     */
+    public hasLabel(): boolean {
+        return false;
+    }
 }
 
 export default MapPoint;

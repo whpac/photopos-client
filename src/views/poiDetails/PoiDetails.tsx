@@ -1,4 +1,3 @@
-import Point from '../../dataModel/entities/Point';
 import ActionAreaContent from '../actionArea/ActionAreaContent';
 import MapPoint from '../map/MapPoint';
 
@@ -9,8 +8,8 @@ type PoiDetailsProps = {
 function PoiDetails({ point }: PoiDetailsProps){
     let title: string;
 
-    if ((point as Point).label){
-        title = (point as Point).label!;
+    if (point?.hasLabel()){
+        title = point.getLabel();
     } else {
         title = '(Unnamed Point)';
     }
