@@ -12,17 +12,17 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
     border-radius: 12px;
     overflow: hidden;
 
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr auto;
 
     border: 1px solid $action-area-border;
     box-shadow: 1px 2px 6px 1px $action-area-shadow;
     backdrop-filter: blur(4px);
 
     .action-area--content {
-        flex-grow: 1;
         background: $action-area-content-bg;
         border-right: 1px solid colors.$grayE;
+        overflow-x: hidden;
 
         @include layout.stretch-contents;
     }

@@ -4,6 +4,9 @@
 
     .action-area-content--header {
         margin: 20px 24px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .action-area-content--body {
