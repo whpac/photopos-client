@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import ActionAreaContent from './ActionAreaContent';
 import MapPointsListener from '../map/MapPointsListener';
+import Point from '../../dataModel/entities/Point';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
@@ -15,8 +16,10 @@ type ActionAreaProps = {
 function ActionArea({ mapListener }: ActionAreaProps){
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
 
+    // TODO: get from GPS
+    const referencePoint = new Point(52.4, 16.9);
     const panels = {
-        nearby: <PoiList mapListener={mapListener} />,
+        nearby: <PoiList mapListener={mapListener} referencePoint={referencePoint} />,
         filter: <ActionAreaContent title="Filter places"><span>Filter options here</span></ActionAreaContent>,
         details: <ActionAreaContent title="Details"><span>Details here</span></ActionAreaContent>,
     };

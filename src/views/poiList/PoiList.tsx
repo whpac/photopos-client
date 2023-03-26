@@ -7,25 +7,33 @@ import PoiListItem from './PoiListItem';
 
 type PoiListProps = {
     mapListener?: MapPointsListener;
+    referencePoint?: MapPoint;
 }
 
-function PoiList({ mapListener }: PoiListProps){
+function PoiList({ mapListener, referencePoint }: PoiListProps){
     const [points, setPoints] = useState<MapPoint[]>([]);
 
     useEffect(() => {
         if(mapListener){
+            let comparer: (a: MapPoint, b: MapPoint) => number;
+            if(referencePoint === undefined){
+                // From north to south, then from west to east
+                comparer = (a, b) => (b.lat - a.lat) || (a.lng - b.lng);
+            }else{
+                comparer = (a, b) => referencePoint.distanceTo(a) - referencePoint.distanceTo(b);
+            }
+
             mapListener.setOnMapPointsChanged((points) => {
-                setPoints([...points])
+                setPoints([...points].sort(comparer))
             });
         }
-    }, [mapListener]);
+    }, [mapListener, referencePoint]);
 
-    const referencePoint = new MapPoint(52.4, 16.9);
     const itemsList = points.map((point) => {
         return (
             <PoiListItem
                 point={point}
-                distance={referencePoint.distanceTo(point)}
+                distance={referencePoint?.distanceTo(point)}
                 key={point.getHashCode()} />
         )
     });

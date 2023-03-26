@@ -6,10 +6,13 @@ class MapPoint {
     public readonly lat: number;
     /** The longitude (East - West) */
     public readonly lng: number;
+    /** Not to recalculate the distances on map re-render */
+    protected distances: Map<MapPoint, number>;
 
     constructor(latitude: number, longitude: number) {
         this.lat = latitude;
         this.lng = longitude;
+        this.distances = new Map();
     }
 
     /**
@@ -21,10 +24,17 @@ class MapPoint {
 
     /**
      * Calculates the distance to another point.
+     * Results are cached.
      * @param point The point to calculate the distance to.
      * @returns The distance in kilometers.
      */
     public distanceTo(point: MapPoint): number {
+        // Don't recalculate the distance if it's already calculated
+        let distance = this.distances.get(point);
+        if(distance !== undefined) {
+            return distance;
+        }
+
         // Source: https://www.geeksforgeeks.org/program-distance-two-points-earth/
         // Convert coords to radians
         const lng1 = this.lng * Math.PI / 180;
@@ -42,7 +52,9 @@ class MapPoint {
 
         // Radius of earth in kilometers
         const R = 6371;
-        return c * R;
+        distance = c * R;
+        this.distances.set(point, distance);
+        return distance;
     }
 }
 
