@@ -2,21 +2,25 @@ import StorageId from './StorageId';
 import StorageJob from './StorageJob';
 import StorageManager from './StorageManager';
 import StorageObject from './StorageObject';
+import StorageSerializer from './StorageSerializer';
 
 class LocalStorageManager implements StorageManager {
 
     save(key: StorageId, value: StorageObject) {
-        // TODO: extend
-        localStorage.setItem(key.toString(), JSON.stringify(value));
+        const serializedValue = StorageSerializer.serialize(value);
+        localStorage.setItem(key.toString(), serializedValue);
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
-        // TODO: construct the object from the JSON
         let value = localStorage.getItem(key.toString());
-        return JSON.parse(value ?? '{}') as StorageObject;
+        if(value === null) {
+            return null;
+        }
+        return StorageSerializer.deserialize(value);
     }
 
     getQueue(): StorageJob[] {
+        // Saving in local storage is synchronous, so there is no queue.
         return [];
     }
 }
