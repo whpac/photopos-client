@@ -7,6 +7,7 @@ import ActionAreaContent from './ActionAreaContent';
 import MapPointsListener from '../map/MapPointsListener';
 import Point from '../../dataModel/entities/Point';
 import MapPoint from '../map/MapPoint';
+import PoiDetails from '../poiDetails/PoiDetails';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
@@ -23,7 +24,7 @@ function ActionArea({ mapListener }: ActionAreaProps){
     const panels = {
         nearby: <PoiList mapListener={mapListener} referencePoint={referencePoint} />,
         filter: <ActionAreaContent title="Filter places"><span>Filter options here</span></ActionAreaContent>,
-        details: <ActionAreaContent title="Details"><span>Details here</span></ActionAreaContent>,
+        details: <PoiDetails point={selectedPoint} />,
     };
 
     const menuItems = [
