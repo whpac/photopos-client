@@ -110,17 +110,22 @@ class MapController {
 
     /**
      * Adds a marker to the map at the specified point, if it doesn't already exist.
-     * @param coords The coordinates of the marker to display
+     * @param point The point to display
      * @returns The marker that was displayed or null if nothing was added
      */
-    private displayMarker(coords: MapPoint): MapMarker | null {
-        const markerHash = coords.getHashCode();
+    private displayMarker(point: MapPoint): MapMarker | null {
+        const markerHash = point.getHashCode();
         let marker = this.markers.get(markerHash);
         if(marker) return null; // Marker already exists
 
-        this.points.add(coords);
-        marker = new MapMarker(coords);
+        this.points.add(point);
+        marker = new MapMarker(point);
         this.markers.set(markerHash, marker);
+
+        if(point.hasLabel()) {
+            marker.bindTooltip(point.getLabel());
+        }
+
         marker.addTo(this.map);
         marker.on('click', () => this.firePointClickedEvent(marker!.getMapPoint()));
         return marker;
