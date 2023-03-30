@@ -1,8 +1,8 @@
 import L, { LeafletEventHandlerFn } from 'leaflet';
 import MapAdapter from './MapAdapter';
+import MapControlChannel from './MapControlChannel';
 import MapMarker from './MapMarker';
 import MapPoint from './MapPoint';
-import MapPointsListener from './MapPointsListener';
 
 class MapController {
     // The relative thickness of the margin to add to the map bounds (in both directions)
@@ -13,15 +13,15 @@ class MapController {
     private markers: Map<string, MapMarker>;
     private points: Set<MapPoint>;
     protected adapter: MapAdapter;
-    protected pointEventListeners: Set<MapPointsListener>;
+    protected controlChannel: MapControlChannel;
 
-    constructor(map: L.Map, adapter: MapAdapter) {
+    constructor(map: L.Map, adapter: MapAdapter, controlChannel: MapControlChannel) {
         this.map = map;
         this.mapEventHandlers = new Map();
         this.markers = new Map();
         this.points = new Set();
         this.adapter = adapter;
-        this.pointEventListeners = new Set();
+        this.controlChannel = controlChannel;
 
         this.attachMapEventHandler('moveend', this.onMapMoved);
         this.updateMapView();
@@ -215,10 +215,7 @@ class MapController {
      * Fires all point change events to all listeners.
      */
     private firePointChangeEvents(): void {
-        const points = this.points;
-        for(const listener of this.pointEventListeners) {
-            listener.fireMapPointsChanged(points);
-        }
+        this.controlChannel.setMapPoints(this.points);
     }
 
     /**
@@ -226,25 +223,7 @@ class MapController {
      * @param point The point that was clicked
      */
     private firePointClickedEvent(point: MapPoint): void {
-        for(const listener of this.pointEventListeners) {
-            listener.fireMapPointClicked(point);
-        }
-    }
-
-    /**
-     * Adds a listener for point change events.
-     * @param listener The listener to add
-     */
-    public addPointEventListener(listener: MapPointsListener): void {
-        this.pointEventListeners.add(listener);
-    }
-
-    /**
-     * Removes a listener for point change events.
-     * @param listener The listener to remove
-     */
-    public removePointEventListener(listener: MapPointsListener): void {
-        this.pointEventListeners.delete(listener);
+        this.controlChannel.selectPoint(point);
     }
 }
 

@@ -3,14 +3,14 @@ import { MapContainer, TileLayer, ZoomControl, Marker, Popup, AttributionControl
 import { useEffect, useMemo, useState } from 'react';
 import MapController from './MapController';
 import MapAdapter from './MapAdapter';
-import MapPointsListener from './MapPointsListener';
+import MapControlChannel from './MapControlChannel';
 
 type MapProps = {
     adapter: MapAdapter;
-    eventListener?: MapPointsListener;
+    mapControlChannel: MapControlChannel;
 };
 
-function Map({ adapter, eventListener }: MapProps) {
+function Map({ adapter, mapControlChannel }: MapProps) {
     const [map, setMap] = useState<L.Map | null>(null);
 
     const displayMap = useMemo(
@@ -36,13 +36,10 @@ function Map({ adapter, eventListener }: MapProps) {
     useEffect(() => {
         if(map === null) return;
 
-        const controller = new MapController(map, adapter);
-        if (eventListener) {
-            controller.addPointEventListener(eventListener);
-        }
+        const controller = new MapController(map, adapter, mapControlChannel);
 
         return () => controller.release();
-    }, [map, adapter, eventListener]);
+    }, [map, adapter, mapControlChannel]);
 
     return (
         <>

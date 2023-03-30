@@ -2,32 +2,35 @@ import './PoiList.scss';
 import { useLayoutEffect, useState } from 'react';
 import ActionAreaContent from '../actionArea/ActionAreaContent';
 import MapPoint from '../map/MapPoint';
-import MapPointsListener from '../map/MapPointsListener';
 import PoiListItem from './PoiListItem';
+import MapControlChannel from '../map/MapControlChannel';
 
 type PoiListProps = {
-    mapListener?: MapPointsListener;
     referencePoint?: MapPoint;
+    mapControlChannel: MapControlChannel;
 }
 
-function PoiList({ mapListener, referencePoint }: PoiListProps){
+function PoiList({ referencePoint, mapControlChannel }: PoiListProps){
     const [points, setPoints] = useState<MapPoint[]>([]);
 
     useLayoutEffect(() => {
-        if(mapListener){
-            let comparer: (a: MapPoint, b: MapPoint) => number;
-            if(referencePoint === undefined){
-                // From north to south, then from west to east
-                comparer = (a, b) => (b.lat - a.lat) || (a.lng - b.lng);
-            }else{
-                comparer = (a, b) => referencePoint.distanceTo(a) - referencePoint.distanceTo(b);
-            }
-
-            mapListener.setOnMapPointsChanged((points) => {
-                setPoints([...points].sort(comparer))
-            });
+        let comparer: (a: MapPoint, b: MapPoint) => number;
+        if(referencePoint === undefined){
+            // From north to south, then from west to east
+            comparer = (a, b) => (b.lat - a.lat) || (a.lng - b.lng);
+        }else{
+            comparer = (a, b) => referencePoint.distanceTo(a) - referencePoint.distanceTo(b);
         }
-    }, [mapListener, referencePoint]);
+
+        const applyPoints = (points: Iterable<MapPoint>) => {
+            setPoints([...points].sort(comparer));
+        };
+
+        mapControlChannel.onMapPointsChanged.addListener((_, points) => {
+            applyPoints(points);
+        });
+        applyPoints(mapControlChannel.getMapPoints());
+    }, [mapControlChannel, referencePoint]);
 
     const itemsList = points.map((point) => {
         return (

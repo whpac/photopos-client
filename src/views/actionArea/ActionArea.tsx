@@ -4,25 +4,25 @@ import ActionAreaMenu from './ActionAreaMenu';
 import { useState } from 'react';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import ActionAreaContent from './ActionAreaContent';
-import MapPointsListener from '../map/MapPointsListener';
 import Point from '../../dataModel/entities/Point';
 import MapPoint from '../map/MapPoint';
 import PoiDetails from '../poiDetails/PoiDetails';
+import MapControlChannel from '../map/MapControlChannel';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
 type ActionAreaProps = {
-    mapListener?: MapPointsListener;
+    mapControlChannel: MapControlChannel;
 }
 
-function ActionArea({ mapListener }: ActionAreaProps){
+function ActionArea({ mapControlChannel }: ActionAreaProps){
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
     const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
 
     // TODO: get from GPS
     const referencePoint = new Point(52.4, 16.9);
     const panels = {
-        nearby: <PoiList mapListener={mapListener} referencePoint={referencePoint} />,
+        nearby: <PoiList referencePoint={referencePoint} mapControlChannel={mapControlChannel} />,
         filter: <ActionAreaContent title="Filter places"><span>Filter options here</span></ActionAreaContent>,
         details: <PoiDetails point={selectedPoint} />,
     };
@@ -44,8 +44,8 @@ function ActionArea({ mapListener }: ActionAreaProps){
             setVisiblePanel(key as PanelKey);
     };
 
-    mapListener?.setOnMapPointClicked((point) => {
-        if(!point.valueEquals(selectedPoint)){
+    mapControlChannel.onPointSelected.addListener((_, point) => {
+        if(point !== null && !point.valueEquals(selectedPoint)){
             setVisiblePanel('details');
             setSelectedPoint(point);
         }else{
