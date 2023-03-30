@@ -2,6 +2,7 @@ import './PoiListItem.scss';
 import MapPoint from '../map/MapPoint';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
+import MapControlChannel from '../map/MapControlChannel';
 
 const convertCoords = (point: MapPoint): string => {
     const decimalToDMS = (decimal: number): string => {
@@ -16,9 +17,10 @@ const convertCoords = (point: MapPoint): string => {
 type PoiListItemProps = {
     point: MapPoint;
     distance?: number;
+    mapControlChannel?: MapControlChannel;
 }
 
-function PoiListItem({ point, distance }: PoiListItemProps){
+function PoiListItem({ point, distance, mapControlChannel }: PoiListItemProps){
     let title: JSX.Element;
     let coordsOrDistance: JSX.Element;
 
@@ -52,11 +54,14 @@ function PoiListItem({ point, distance }: PoiListItemProps){
 
     return (
         <li className="poi-list-item">
-            <button type="button" className="poi-list-item--button">
-                {title}
-                <span className="poi-list-item--location">
-                    {coordsOrDistance}
-                </span>
+            <button
+                type="button"
+                className="poi-list-item--button"
+                onClick={() => mapControlChannel?.selectPoint(point)}>
+                    {title}
+                    <span className="poi-list-item--location">
+                        {coordsOrDistance}
+                    </span>
             </button>
         </li>
     );

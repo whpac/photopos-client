@@ -37,7 +37,8 @@ function PoiList({ referencePoint, mapControlChannel }: PoiListProps){
             <PoiListItem
                 point={point}
                 distance={referencePoint?.distanceTo(point)}
-                key={point.getHashCode()} />
+                key={point.getHashCode()}
+                mapControlChannel={mapControlChannel} />
         )
     });
 
