@@ -87,7 +87,7 @@ class MapController {
 
         const removedPoints = this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
         if(this.hasMapChanged(addedPoints, removedPoints)) {
-            this.firePointChangeEvents();
+            this.controlChannel.setMapPoints(this.points);
         }
     }
 
@@ -126,7 +126,7 @@ class MapController {
         }
 
         marker.addTo(this.map);
-        marker.on('click', () => this.firePointClickedEvent(marker!.getMapPoint()));
+        marker.on('click', () => this.controlChannel.selectPoint(marker!.getMapPoint()));
         return marker;
     }
 
@@ -209,21 +209,6 @@ class MapController {
         );
 
         return marginBounds;
-    }
-
-    /**
-     * Fires all point change events to all listeners.
-     */
-    private firePointChangeEvents(): void {
-        this.controlChannel.setMapPoints(this.points);
-    }
-
-    /**
-     * Fires point click event to all listeners.
-     * @param point The point that was clicked
-     */
-    private firePointClickedEvent(point: MapPoint): void {
-        this.controlChannel.selectPoint(point);
     }
 }
 
