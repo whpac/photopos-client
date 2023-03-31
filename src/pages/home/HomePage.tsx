@@ -2,11 +2,16 @@ import './HomePage.scss';
 import Map from '../../views/map/Map';
 import ActionArea from '../../views/actionArea/ActionArea';
 import StorageMapAdapter from '../../dataModel/mapData/StorageMapAdapter';
-import LocalStorageManager from '../../dataModel/storage/LocalStorageManager';
 import MapControlChannel from '../../views/map/MapControlChannel';
+import LocalStorageManager from '../../dataModel/storage/LocalStorageManager';
+import RemoteStorageManager from '../../dataModel/storage/RemoteStorageManager';
+import HybridStorageManager from '../../dataModel/storage/HybridStorageManager';
 
 let mapAdapter = new StorageMapAdapter(
-    new LocalStorageManager()
+    new HybridStorageManager([
+        new LocalStorageManager(),
+        new RemoteStorageManager()
+    ])
 );
 let mapControlChannel = new MapControlChannel();
 
