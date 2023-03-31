@@ -1,14 +1,28 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager from './StorageManager';
+import StorageManager, { StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
 
-class LocalStorageManager implements StorageManager {
+type LocalStorageEnvelope = {
+    version: number;
+    expires: number | null;
+    payload: any;
+};
 
-    save(key: StorageId, value: StorageObject) {
+class LocalStorageManager implements StorageManager {
+    protected readonly FORMAT_VERSION = 1;
+
+    save(key: StorageId, value: StorageObject, options?: StorageSaveOptions) {
+        const expires = options?.expires ?? null;
+
         const serializedValue = StorageSerializer.serialize(value);
-        const jsonValue = JSON.stringify(serializedValue);
+        const envelope: LocalStorageEnvelope = {
+            version: 1,
+            expires: expires,
+            payload: serializedValue
+        };
+        const jsonValue = JSON.stringify(envelope);
         localStorage.setItem(key.toString(), jsonValue);
     }
 
@@ -17,8 +31,18 @@ class LocalStorageManager implements StorageManager {
         if(value === null) {
             return null;
         }
-        const parsedValue = JSON.parse(value);
-        return StorageSerializer.deserialize(parsedValue);
+        const envelope = JSON.parse(value) as LocalStorageEnvelope;
+        let isUpToDate = true;
+        isUpToDate &&= (envelope.version !== this.FORMAT_VERSION);
+        isUpToDate &&= (envelope.expires === null || envelope.expires > Date.now());
+
+        if(!isUpToDate) {
+            // Don't keep outdated data.
+            localStorage.removeItem(key.toString());
+            return null;
+        }
+
+        return StorageSerializer.deserialize(envelope.payload);
     }
 
     getQueue(): StorageJob[] {

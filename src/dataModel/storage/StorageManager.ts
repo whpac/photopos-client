@@ -2,6 +2,11 @@ import StorageId from './StorageId';
 import StorageJob from './StorageJob';
 import StorageObject from './StorageObject';
 
+export type StorageSaveOptions = {
+    /** If the storage supports expiration, how long should the object be kept. */
+    expires?: number | null;
+};
+
 /**
  * Manager of a particular storage.
  */
@@ -16,8 +21,9 @@ interface StorageManager {
      * 
      * @param key The entity key under which the object will be stored.
      * @param value The entity to save.
+     * @param options Options for the saving process.
      */
-    save(key: StorageId, value: StorageObject): void;
+    save(key: StorageId, value: StorageObject, options?: StorageSaveOptions): void;
 
     /**
      * Returns a promise that resolves to the entity with the given key.

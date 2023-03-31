@@ -1,6 +1,6 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager from './StorageManager';
+import StorageManager, { StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 
 class HybridStorageManager implements StorageManager {
@@ -10,8 +10,11 @@ class HybridStorageManager implements StorageManager {
         this.storageManagers = storageManagers;
     }
 
-    save(key: StorageId, value: StorageObject) {
-        // TODO: Implement this.
+    save(key: StorageId, value: StorageObject, options?: StorageSaveOptions) {
+        // Save the value in all the storage managers.
+        for(const storageManager of this.storageManagers) {
+            storageManager.save(key, value, options);
+        }
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {

@@ -1,6 +1,6 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager from './StorageManager';
+import StorageManager, { StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
 
@@ -8,7 +8,7 @@ class RemoteStorageManager implements StorageManager {
 
     protected readonly API_URL = 'http://localhost/api/';
 
-    save(key: StorageId, value: StorageObject) {
+    save(key: StorageId, value: StorageObject, options?: StorageSaveOptions) {
         // TODO: Implement this.
     }
 
