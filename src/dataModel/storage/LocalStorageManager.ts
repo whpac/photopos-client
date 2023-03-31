@@ -8,7 +8,8 @@ class LocalStorageManager implements StorageManager {
 
     save(key: StorageId, value: StorageObject) {
         const serializedValue = StorageSerializer.serialize(value);
-        localStorage.setItem(key.toString(), serializedValue);
+        const jsonValue = JSON.stringify(serializedValue);
+        localStorage.setItem(key.toString(), jsonValue);
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
@@ -16,7 +17,8 @@ class LocalStorageManager implements StorageManager {
         if(value === null) {
             return null;
         }
-        return StorageSerializer.deserialize(value);
+        const parsedValue = JSON.parse(value);
+        return StorageSerializer.deserialize(parsedValue);
     }
 
     getQueue(): StorageJob[] {

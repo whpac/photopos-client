@@ -17,7 +17,7 @@ class RemoteStorageManager implements StorageManager {
             const response = await fetch(this.API_URL + key.toString());
             if(!response.ok) return null;
 
-            const data = await response.text();
+            const data = await response.json();
             return StorageSerializer.deserialize(data);
         } catch(e) {
             console.error(e);

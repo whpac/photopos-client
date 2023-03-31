@@ -26,34 +26,15 @@ class StorageSerializer {
         StorageSerializer.instantiators.set(type, instantiator);
     }
 
-    /**
-     * Serializes the object to a JSON string.
-     * @param object The StorageObject to serialize.
-     * @returns A JSON string representing the object.
-     */
-    static serialize(object: StorageObject): string {
-        return JSON.stringify(this.prepareToSerialize(object));
-    }
-
-    /**
-     * Deserializes a JSON string into a StorageObject.
-     * @param json A JSON string representing a StorageObject.
-     * @returns A deserialized StorageObject.
-     */
-    static deserialize(json: string): StorageObject {
-        const prepared = JSON.parse(json) as PreparedObject;
-        return this.instantiate(prepared);
-    }
-
     protected static isPrimitive(value: any): value is Primitive {
         return typeof value !== 'object' || value === null;
     }
 
     /**
-     * Prepares an object for serialization.
-     * @param object The StorageObject to prepare for serialization.
+     * Serializes an object.
+     * @param object The StorageObject to serialize.
      */
-    protected static prepareToSerialize(object: StorageObject): PreparedObject {
+    public static serialize(object: StorageObject): PreparedObject {
         let fields = object.getSerializableFields();
         let prepared = {} as ObjectOfPrmitives;
 
@@ -61,11 +42,11 @@ class StorageSerializer {
             let value = fields[key];
 
             if(!Array.isArray(value)) {
-                prepared[key] = this.prepareSingleToSerialize(value);
+                prepared[key] = this.serializeSingle(value);
             } else {
                 let preparedArray = [] as (PreparedObject[] | Primitive[]);
                 for(let i = 0; i < value.length; i++) {
-                    preparedArray[i] = this.prepareSingleToSerialize(value[i]);
+                    preparedArray[i] = this.serializeSingle(value[i]);
                 }
                 prepared[key] = preparedArray;
             }
@@ -78,34 +59,34 @@ class StorageSerializer {
     }
 
     /**
-     * Prepares a single value (not array) for serialization.
-     * @param value A primitive or a StorageObject to prepare for serialization.
+     * Serializes a single value (not array).
+     * @param value A primitive or a StorageObject to serialize.
      * @returns A primitive or an ObjectOfPrmitives.
      */
-    protected static prepareSingleToSerialize(value: StorageObject | Primitive): PreparedObject | Primitive {
+    protected static serializeSingle(value: StorageObject | Primitive): PreparedObject | Primitive {
         // If the value is a primitive, we don't need to serialize it.
         if(this.isPrimitive(value)) {
             return value;
         } else {
-            return this.prepareToSerialize(value);
+            return this.serialize(value);
         }
     }
 
     /**
-     * Instantiates a StorageObject from a PreparedObject.
-     * @param prepared The value to instantiate.
-     * @returns An instantiated StorageObject.
+     * Deserailizes a StorageObject from a PreparedObject.
+     * @param prepared The value to deserialize.
+     * @returns A deserialized StorageObject.
      */
-    protected static instantiate(prepared: PreparedObject): StorageObject {
+    public static deserialize(prepared: PreparedObject): StorageObject {
         let unprepared = {} as SerializableObject;
         for(let field in prepared.data) {
             let value = prepared.data[field];
             if(!Array.isArray(value)) {
-                unprepared[field] = this.instantiateSingle(value);
+                unprepared[field] = this.deserializeSingle(value);
             } else {
                 let unpreparedArray = [] as (StorageObject[] | Primitive[]);
                 for(let i = 0; i < value.length; i++) {
-                    unpreparedArray[i] = this.instantiateSingle(value[i]);
+                    unpreparedArray[i] = this.deserializeSingle(value[i]);
                 }
                 unprepared[field] = unpreparedArray;
             }
@@ -119,15 +100,15 @@ class StorageSerializer {
     }
 
     /**
-     * Instantiates a single value (not array).
-     * @param value A value to instantiate.
-     * @returns The value if it is a primitive, or the instantiated StorageObject.
+     * Deserializes a single value (not array).
+     * @param value A value to deserialize.
+     * @returns The value if it is a primitive, or the deserialized StorageObject.
      */
-    protected static instantiateSingle(value: PreparedObject | Primitive): StorageObject | Primitive {
+    protected static deserializeSingle(value: PreparedObject | Primitive): StorageObject | Primitive {
         if(this.isPrimitive(value)) {
             return value;
         } else {
-            return this.instantiate(value);
+            return this.deserialize(value);
         }
     }
 }
