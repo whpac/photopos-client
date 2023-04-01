@@ -7,6 +7,11 @@ export type StorageSaveOptions = {
     expires?: number | null;
 };
 
+export type AnnotatedStorageObject = {
+    payload: StorageObject;
+    metadata: StorageSaveOptions;
+};
+
 /**
  * Manager of a particular storage.
  */
@@ -34,6 +39,17 @@ interface StorageManager {
      * @param key Key of the entity to retrieve.
      */
     retrieve(key: StorageId): Promise<StorageObject | null>;
+
+    /**
+     * Returns a promise that resolves to the entity with the given key. Attaches
+     * metadata to the entity.
+     * 
+     * May resolve instantenously if the entity is present locally or cause to wait for fetching
+     * all the needed resources. If the entity is not present, null is returned.
+     * 
+     * @param key Key of the entity to retrieve.
+     */
+    retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null>;
 
     /**
      * Returns a queue of pending storage jobs.

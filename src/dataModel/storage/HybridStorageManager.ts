@@ -1,6 +1,6 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager, { StorageSaveOptions } from './StorageManager';
+import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 
 class HybridStorageManager implements StorageManager {
@@ -18,13 +18,18 @@ class HybridStorageManager implements StorageManager {
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
+        const annotatedObject = await this.retrieveWithMetadata(key);
+        return annotatedObject?.payload ?? null;
+    }
+
+    async retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null> {
         for(const storageManager of this.storageManagers) {
-            const value = await storageManager.retrieve(key);
+            const value = await storageManager.retrieveWithMetadata(key);
 
             if(value !== null) {
                 if(storageManager !== this.storageManagers[0]) {
-                    // Save the value in all the first storage manager.
-                    this.storageManagers[0].save(key, value);
+                    // Save the value in the first storage manager.
+                    this.storageManagers[0].save(key, value.payload, value.metadata);
                 }
                 return value;
             }

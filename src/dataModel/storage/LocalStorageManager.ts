@@ -1,6 +1,6 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager, { StorageSaveOptions } from './StorageManager';
+import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
 
@@ -27,6 +27,11 @@ class LocalStorageManager implements StorageManager {
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
+        const annotatedObject = await this.retrieveWithMetadata(key);
+        return annotatedObject?.payload ?? null;
+    }
+
+    async retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null> {
         let value = localStorage.getItem(key.toString());
         if(value === null) {
             return null;
@@ -42,7 +47,13 @@ class LocalStorageManager implements StorageManager {
             return null;
         }
 
-        return StorageSerializer.deserialize(envelope.payload);
+        const object = StorageSerializer.deserialize(envelope.payload);
+        return {
+            payload: object,
+            metadata: {
+                expires: envelope.expires
+            }
+        };
     }
 
     getQueue(): StorageJob[] {

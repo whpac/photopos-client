@@ -1,6 +1,6 @@
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
-import StorageManager, { StorageSaveOptions } from './StorageManager';
+import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
 
@@ -13,6 +13,11 @@ class RemoteStorageManager implements StorageManager {
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
+        const annotatedObject = await this.retrieveWithMetadata(key);
+        return annotatedObject?.payload ?? null;
+    }
+
+    async retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null> {
         try {
             const response = await fetch(this.API_URL + key.toString());
             if(!response.ok) return null;
@@ -22,7 +27,13 @@ class RemoteStorageManager implements StorageManager {
             if(!success) return null;
 
             const expires = data.expires ?? null;
-            return StorageSerializer.deserialize(data.payload);
+            const payload = StorageSerializer.deserialize(data.payload);
+            return {
+                payload: payload,
+                metadata: {
+                    expires: expires
+                }
+            };
         } catch(e) {
             console.error(e);
             return null;
