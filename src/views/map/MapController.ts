@@ -76,16 +76,31 @@ class MapController {
 
         const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
 
+        // TODO: Filter the points as user ordered to do
+
+        // Here will remain those points that should be removed from the map
+        // even though they are still in the bounds (but not returned by the adapter
+        // or filtered out by the user)
+        const formerPointsHash = new Set<string>(this.markers.keys());
+
         const addedPoints = new Set<MapPoint>();
         for(const point of adapterPoints) {
             if(!marginBounds.contains(point)) continue; // Skip points that are out of bounds
             const marker = this.displayMarker(point);
+            formerPointsHash.delete(point.getHashCode());
 
             if(marker == null) continue; // Skip points that are already present
             addedPoints.add(point);
         }
 
         const removedPoints = this.removeOutOfBoundsMarkers(this.MAP_MARGIN);
+
+        // Remove the points that are in bounds but filtered out
+        for(const pointHash of formerPointsHash) {
+            const removedPoint = this.removeMarker(pointHash);
+            if(removedPoint) removedPoints.add(removedPoint);
+        }
+
         if(this.hasMapChanged(addedPoints, removedPoints)) {
             this.controlChannel.setMapPoints(this.points);
         }
@@ -133,15 +148,17 @@ class MapController {
     /**
      * Removes a marker from the map.
      * @param markerHash The hash of the marker to remove.
+     * @returns The point that was removed or null if nothing was removed
      */
-    private removeMarker(markerHash: string): void {
+    private removeMarker(markerHash: string): MapPoint | null {
         const marker = this.markers.get(markerHash);
-        if(!marker) return; // There was no marker with such hash
+        if(!marker) return null; // There was no marker with such hash
 
         const point = marker.getMapPoint();
         this.points.delete(point);
         this.markers.delete(markerHash);
         marker.remove();
+        return point;
     }
 
     /**
