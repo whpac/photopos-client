@@ -6,6 +6,23 @@ import MapControlChannel from '../../views/map/MapControlChannel';
 import LocalStorageManager from '../../dataModel/storage/LocalStorageManager';
 import RemoteStorageManager from '../../dataModel/storage/RemoteStorageManager';
 import HybridStorageManager from '../../dataModel/storage/HybridStorageManager';
+import MapPoint from '../../views/map/MapPoint';
+import MapFilter from '../../views/map/MapFilter';
+import EventListenerSet, { EventListener } from '../../dataModel/EventListenerSet';
+
+// A dummy map filter for testing purposes
+class MockMapFilter implements MapFilter {
+    onChange: EventListenerSet<MapFilter, null>;
+    fireOnChange: EventListener<MapFilter, null>;
+
+    constructor() {
+        [this.onChange, this.fireOnChange] = EventListenerSet.create();
+    }
+
+    filter(points: MapPoint[]): MapPoint[] {
+        return points.filter((point) => point.getLabel() !== 'Test 1');
+    }
+}
 
 let mapAdapter = new StorageMapAdapter(
     new HybridStorageManager([
@@ -14,6 +31,8 @@ let mapAdapter = new StorageMapAdapter(
     ])
 );
 let mapControlChannel = new MapControlChannel();
+
+mapControlChannel.setMapFilter(new MockMapFilter());
 
 function HomePage() {
     return (
