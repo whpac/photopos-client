@@ -15,7 +15,7 @@ class StorageId {
     }
 
     public toString(): string {
-        return `${this.entityType}:${this.entityId}`;
+        return `${this.entityType}/${this.entityId}`;
     }
 }
 

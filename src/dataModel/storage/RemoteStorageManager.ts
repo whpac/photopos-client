@@ -6,7 +6,7 @@ import StorageSerializer from './StorageSerializer';
 
 class RemoteStorageManager implements StorageManager {
 
-    protected readonly API_URL = 'http://localhost/api/';
+    protected readonly API_URL = 'http://localhost/photopos/server/api/api.php?resource=';
 
     save(key: StorageId, value: StorageObject, options?: StorageSaveOptions) {
         // TODO: Implement this.
@@ -18,7 +18,11 @@ class RemoteStorageManager implements StorageManager {
             if(!response.ok) return null;
 
             const data = await response.json();
-            return StorageSerializer.deserialize(data);
+            const success = data.success ?? false;
+            if(!success) return null;
+
+            const expires = data.expires ?? null;
+            return StorageSerializer.deserialize(data.payload);
         } catch(e) {
             console.error(e);
             return null;
