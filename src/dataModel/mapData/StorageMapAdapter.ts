@@ -3,19 +3,36 @@ import MapPoint from '../../views/map/MapPoint';
 import MapTile from '../entities/MapTile';
 import StorageId from '../storage/StorageId';
 import StorageManager from '../storage/StorageManager';
+import TileCalculator from './TileCalculator';
 
 class StorageMapAdapter implements MapAdapter {
 
+    protected readonly MAX_BATCH_FETCH = 10;
+
     protected storage: StorageManager;
+    protected tileCalculator: TileCalculator;
 
     constructor(storage: StorageManager) {
         this.storage = storage;
+        this.tileCalculator = new TileCalculator();
     }
 
     async getPoints(latMin: number, latMax: number, lngMin: number, lngMax: number): Promise<MapPoint[]> {
-        const tilesToFetch = [
-            new StorageId('MapTile', '0')
-        ];
+        const tileCount = this.tileCalculator.countTilesInBounds(latMin, latMax, lngMin, lngMax);
+        if(tileCount > this.MAX_BATCH_FETCH) {
+            return [];
+        }
+
+        const minTile = this.tileCalculator.getTile(latMin, lngMin);
+        const maxTile = this.tileCalculator.getTile(latMax, lngMax);
+
+        const tilesToFetch = [];
+        for(let x = minTile[0]; x <= maxTile[0]; x++) {
+            for(let y = minTile[1]; y <= maxTile[1]; y++) {
+                tilesToFetch.push(new StorageId('MapTile', x + ',' + y));
+            }
+        }
+
         const tilesAwaiters = [];
 
         for(const tile of tilesToFetch) {
