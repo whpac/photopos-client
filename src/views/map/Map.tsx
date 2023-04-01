@@ -1,5 +1,5 @@
 import './Map.scss';
-import { MapContainer, TileLayer, ZoomControl, Marker, Popup, AttributionControl } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, AttributionControl } from 'react-leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import MapController from './MapController';
 import MapAdapter from './MapAdapter';
@@ -23,11 +23,6 @@ function Map({ adapter, mapControlChannel }: MapProps) {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" maxNativeZoom={19} maxZoom={20}
                 />
-                {/*<Marker position={[52.4, 16.9]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>*/}
             </MapContainer>
         ),
         [],
