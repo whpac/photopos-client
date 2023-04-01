@@ -24,6 +24,7 @@ class MapController {
         this.controlChannel = controlChannel;
 
         this.attachMapEventHandler('moveend', this.onMapMoved);
+        this.attachMapEventHandler('click', this.onMapClicked);
         this.controlChannel.onMapFilterChanged.addListener(() => this.updateMapView());
         this.updateMapView();
     }
@@ -64,6 +65,12 @@ class MapController {
 
     private onMapMoved(): void {
         this.updateMapView();
+    }
+
+    private onMapClicked(): void {
+        // Don't deselect the point if nothing is selected
+        if(this.controlChannel.getSelectedPoint() === null) return;
+        this.controlChannel.selectPoint(null);
     }
 
     /**
