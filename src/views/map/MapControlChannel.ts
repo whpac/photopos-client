@@ -1,4 +1,5 @@
 import EventListenerSet, { EventListener } from '../../dataModel/EventListenerSet';
+import MapFilter from './MapFilter';
 import MapPoint from './MapPoint';
 
 class MapControlChannel {
@@ -17,9 +18,19 @@ class MapControlChannel {
     /** Fires the onMapPointsChanged event */
     protected readonly fireMapPointsChanged: EventListener<MapControlChannel, Iterable<MapPoint>>;
 
+    /** The currently active map filter */
+    protected mapFilter: MapFilter | null = null;
+    /** Represents the mapFilterChanged event */
+    public readonly onMapFilterChanged: EventListenerSet<MapControlChannel, MapFilter | null>;
+    /** Fires the onMapFilterChanged event */
+    protected readonly fireMapFilterChanged: EventListener<MapControlChannel, MapFilter | null>;
+    /** A function that gets called when the filter's options are changed */
+    protected filterHandler: EventListener<MapFilter, null> | null = null;
+
     public constructor() {
         [this.onPointSelected, this.firePointSelected] = EventListenerSet.create();
         [this.onMapPointsChanged, this.fireMapPointsChanged] = EventListenerSet.create();
+        [this.onMapFilterChanged, this.fireMapFilterChanged] = EventListenerSet.create();
     }
 
     /**
@@ -52,6 +63,29 @@ class MapControlChannel {
     public setMapPoints(mapPoints: Iterable<MapPoint>): void {
         this.mapPoints = mapPoints;
         this.fireMapPointsChanged(this, mapPoints);
+    }
+
+    /**
+     * Returns the currently active map filter or null if no filter is active.
+     */
+    public getMapFilter(): MapFilter | null {
+        return this.mapFilter;
+    }
+
+    /**
+     * Sets the filter to be used for filtering map points.
+     * @param mapFilter The map filter to set or null to remove the currently active map filter.
+     */
+    public setMapFilter(mapFilter: MapFilter | null): void {
+        this.filterHandler ??= (filter) => this.fireMapFilterChanged(this, filter);
+
+        // Remove the old filter's listener
+        // and attach it to the new filter
+        this.mapFilter?.onChange.removeListener(this.filterHandler);
+        mapFilter?.onChange.addListener(this.filterHandler);
+
+        this.mapFilter = mapFilter;
+        this.fireMapFilterChanged(this, mapFilter);
     }
 }
 

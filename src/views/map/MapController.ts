@@ -24,6 +24,7 @@ class MapController {
         this.controlChannel = controlChannel;
 
         this.attachMapEventHandler('moveend', this.onMapMoved);
+        this.controlChannel.onMapFilterChanged.addListener(() => this.updateMapView());
         this.updateMapView();
     }
 
@@ -74,9 +75,12 @@ class MapController {
         const bNE = marginBounds.getNorthEast();
         const bSW = marginBounds.getSouthWest();
 
-        const adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
+        let adapterPoints = await this.adapter.getPoints(bSW.lat, bNE.lat, bSW.lng, bNE.lng);
 
-        // TODO: Filter the points as user ordered to do
+        const filter = this.controlChannel.getMapFilter();
+        if(filter !== null) {
+            adapterPoints = filter.filter(adapterPoints);
+        }
 
         // Here will remain those points that should be removed from the map
         // even though they are still in the bounds (but not returned by the adapter
