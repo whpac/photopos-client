@@ -33,7 +33,7 @@ class LocalStorageManager implements StorageManager {
         }
         const envelope = JSON.parse(value) as LocalStorageEnvelope;
         let isUpToDate = true;
-        isUpToDate &&= (envelope.version !== this.FORMAT_VERSION);
+        isUpToDate &&= (envelope.version === this.FORMAT_VERSION);
         isUpToDate &&= (envelope.expires === null || envelope.expires > Date.now());
 
         if(!isUpToDate) {
