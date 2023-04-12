@@ -2,14 +2,19 @@ import EventListenerSet, { EventListener } from '../../dataModel/EventListenerSe
 import MapFilter from './MapFilter';
 import MapPoint from './MapPoint';
 
+type PointSelectedEventData = {
+    point: MapPoint | null;
+    previousPoint: MapPoint | null;
+};
+
 class MapControlChannel {
 
     /** Currently selected point */
     protected selectedPoint: MapPoint | null = null;
     /** Represents the pointSelected event */
-    public readonly onPointSelected: EventListenerSet<MapControlChannel, MapPoint | null>;
+    public readonly onPointSelected: EventListenerSet<MapControlChannel, PointSelectedEventData>;
     /** Fires the onPointSelected event */
-    protected readonly firePointSelected: EventListener<MapControlChannel, MapPoint | null>;
+    protected readonly firePointSelected: EventListener<MapControlChannel, PointSelectedEventData>;
 
     /** Points currently on the map */
     protected mapPoints: Iterable<MapPoint> = [];
@@ -45,8 +50,9 @@ class MapControlChannel {
      * @param point The point to select or null to deselect the currently selected point.
      */
     public selectPoint(point: MapPoint | null): void {
+        const previousPoint = this.selectedPoint;
         this.selectedPoint = point;
-        this.firePointSelected(this, point);
+        this.firePointSelected(this, { point, previousPoint });
     }
 
     /**

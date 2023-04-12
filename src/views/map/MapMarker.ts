@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import MapPoint from './MapPoint';
+import MapMarkerIcon from './MapMarkerIcon';
 
 class MapMarker extends L.Marker {
     protected point: MapPoint;
@@ -7,6 +8,7 @@ class MapMarker extends L.Marker {
     constructor(point: MapPoint, options?: L.MarkerOptions) {
         super(point, options);
         this.point = point;
+        this.setIcon(MapMarkerIcon.createDefaultIcon());
     }
 
     getMapPoint(): MapPoint {

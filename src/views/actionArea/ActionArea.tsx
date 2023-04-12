@@ -44,7 +44,7 @@ function ActionArea({ mapControlChannel }: ActionAreaProps){
             setVisiblePanel(key as PanelKey);
     };
 
-    mapControlChannel.onPointSelected.addListener((_, point) => {
+    mapControlChannel.onPointSelected.addListener((_, { point }) => {
         if(point !== null && !point.valueEquals(selectedPoint)){
             setVisiblePanel('details');
             setSelectedPoint(point);

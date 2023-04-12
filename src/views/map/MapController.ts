@@ -3,6 +3,7 @@ import MapAdapter from './MapAdapter';
 import MapControlChannel from './MapControlChannel';
 import MapMarker from './MapMarker';
 import MapPoint from './MapPoint';
+import MapMarkerIcon from './MapMarkerIcon';
 
 class MapController {
     // The relative thickness of the margin to add to the map bounds (in both directions)
@@ -26,6 +27,18 @@ class MapController {
         this.attachMapEventHandler('moveend', this.onMapMoved);
         this.attachMapEventHandler('click', this.onMapClicked);
         this.controlChannel.onMapFilterChanged.addListener(() => this.updateMapView());
+        this.controlChannel.onPointSelected.addListener((_, { point, previousPoint }) => {
+            // Deselect the previous point
+            if(previousPoint !== null) {
+                const marker = this.markers.get(previousPoint.getHashCode());
+                marker?.setIcon(MapMarkerIcon.createDefaultIcon());
+            }
+            // Select the current point
+            if(point !== null) {
+                const marker = this.markers.get(point.getHashCode());
+                marker?.setIcon(MapMarkerIcon.createSelectedIcon());
+            }
+        });
         this.updateMapView();
     }
 
