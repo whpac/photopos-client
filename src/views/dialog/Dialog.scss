@@ -6,6 +6,9 @@ $dialog-shadow: transparentize(colors.$black, 0.75);
 $dialog-header-bg: transparentize(colors.$grayE, 0.3);
 $dialog-content-bg: transparentize(colors.$white, 0.15);
 
+$dialog-close-button-hover-bg: transparentize(colors.$black, 0.9);
+$dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
+
 .dialog {
     position: fixed;
     top: 25vh;
@@ -13,6 +16,9 @@ $dialog-content-bg: transparentize(colors.$white, 0.15);
     width: 40vw;
     z-index: 10000;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
+    background: none;
 
     border: 1px solid $dialog-border;
     border-radius: 12px;
@@ -24,7 +30,7 @@ $dialog-content-bg: transparentize(colors.$white, 0.15);
     .dialog--header {
         background-color: $dialog-header-bg;
         backdrop-filter: blur(4px);
-        padding: 8px 20px;
+        padding: 8px 12px 8px 20px;
 
         display: flex;
         justify-content: space-between;
@@ -32,6 +38,32 @@ $dialog-content-bg: transparentize(colors.$white, 0.15);
 
         .dialog--title {
             margin: 0;
+        }
+    }
+
+    .dialog--header-buttons button {
+        appearance: none;
+        font: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        font-size: 1.2em;
+        line-height: 1;
+        border-radius: 4px;
+        padding: 4px;
+        height: 1em;
+        width: 1em;
+        text-align: center;
+        box-sizing: content-box;
+
+        &:hover {
+            background-color: $dialog-close-button-hover-bg;
+        }
+
+        &:active {
+            background-color: $dialog-close-button-active-bg;
         }
     }
 
