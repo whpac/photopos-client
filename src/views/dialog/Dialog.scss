@@ -1,0 +1,42 @@
+@use '../../styles/colors' as colors;
+
+$dialog-border: #ccc;
+$dialog-shadow: transparentize(colors.$black, 0.75);
+
+$dialog-header-bg: transparentize(colors.$grayE, 0.3);
+$dialog-content-bg: transparentize(colors.$white, 0.15);
+
+.dialog {
+    position: fixed;
+    top: 25vh;
+    left: 30vw;
+    width: 40vw;
+    z-index: 10000;
+    overflow: hidden;
+
+    border: 1px solid $dialog-border;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px 2px $dialog-shadow;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+
+    .dialog--header {
+        background-color: $dialog-header-bg;
+        backdrop-filter: blur(4px);
+        padding: 8px 20px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .dialog--title {
+            margin: 0;
+        }
+    }
+
+    .dialog--content {
+        background-color: $dialog-content-bg;
+        padding: 20px;
+    }
+}
