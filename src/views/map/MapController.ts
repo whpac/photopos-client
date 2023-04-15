@@ -31,12 +31,12 @@ class MapController {
             // Deselect the previous point
             if(previousPoint !== null) {
                 const marker = this.markers.get(previousPoint.getHashCode());
-                marker?.setIcon(MapMarkerIcon.createDefaultIcon());
+                marker?.setIcon(MapMarkerIcon.DEFAULT_ICON);
             }
             // Select the current point
             if(point !== null) {
                 const marker = this.markers.get(point.getHashCode());
-                marker?.setIcon(MapMarkerIcon.createSelectedIcon());
+                marker?.setIcon(MapMarkerIcon.SELECTED_ICON);
             }
         });
         this.updateMapView();

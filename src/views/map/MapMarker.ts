@@ -8,7 +8,7 @@ class MapMarker extends L.Marker {
     constructor(point: MapPoint, options?: L.MarkerOptions) {
         super(point, options);
         this.point = point;
-        this.setIcon(MapMarkerIcon.createDefaultIcon());
+        this.setIcon(MapMarkerIcon.DEFAULT_ICON);
     }
 
     getMapPoint(): MapPoint {
