@@ -1,3 +1,7 @@
+@use '../../styles/colors' as colors;
+
+$button-hover-bg: transparentize(colors.$blue-100, 0.5);
+
 nav {
     display: flex;
     flex-direction: row;
@@ -17,6 +21,28 @@ nav {
         li {
             display: inline-block;
             margin: 0 8px;
+        }
+    }
+
+    button {
+        appearance: none;
+        font: inherit;
+        background: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        line-height: 1;
+        padding: 8px 16px;
+        border:1px solid colors.$blue-500;
+        border-radius: 16px;
+        color: colors.$blue-900;
+
+        &:hover {
+            background-color: $button-hover-bg;
+        }
+
+        &:active {
+            background-color: colors.$blue-100;
         }
     }
 }
