@@ -23,26 +23,4 @@ nav {
             margin: 0 8px;
         }
     }
-
-    button {
-        appearance: none;
-        font: inherit;
-        background: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        line-height: 1;
-        padding: 8px 16px;
-        border:1px solid colors.$blue-500;
-        border-radius: 16px;
-        color: colors.$blue-900;
-
-        &:hover {
-            background-color: $button-hover-bg;
-        }
-
-        &:active {
-            background-color: colors.$blue-100;
-        }
-    }
 }

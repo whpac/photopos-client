@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import './Dialog.scss';
 import DialogController from './DialogController';
+import Button from '../forms/Button';
 
 interface DialogProps {
     dialogId: string;
@@ -20,9 +21,9 @@ function Dialog({ dialogId, title, children }: DialogProps){
             <div className="dialog--header">
                 <h2 className="dialog--title">{title}</h2>
                 <div className="dialog--header-buttons">
-                    <button onClick={closeDialog} aria-label="Close" title="Close" type="button">
+                    <Button onClick={closeDialog}>
                         <FontAwesomeIcon icon={icon({name: 'xmark', style: 'solid'})} />
-                    </button>
+                    </Button>
                 </div>
             </div>
             <div className="dialog--content">

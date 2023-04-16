@@ -1,4 +1,5 @@
 import DialogController from '../dialog/DialogController';
+import Button from '../forms/Button';
 import LoginDialog from '../loginDialog/LoginDialog';
 import "./Navbar.scss";
 
@@ -16,7 +17,7 @@ function Navbar() {
             </div>
             <div className="navRight">
                 <ul>
-                    <li><button type="button" onClick={displayLoginDialog}>Log in</button></li>
+                    <li><Button onClick={displayLoginDialog}>Log in</Button></li>
                 </ul>
             </div>
         </nav>

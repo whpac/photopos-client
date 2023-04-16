@@ -42,12 +42,8 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
     }
 
     .dialog--header-buttons button {
-        appearance: none;
-        font: inherit;
-        background: none;
+        color: inherit;
         border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
 
         font-size: 1.2em;
         line-height: 1;
