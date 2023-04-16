@@ -65,6 +65,7 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
 
     .dialog--content {
         background-color: $dialog-content-bg;
+        backdrop-filter: blur(4px);
         padding: 20px;
     }
 }
