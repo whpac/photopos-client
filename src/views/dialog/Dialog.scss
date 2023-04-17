@@ -12,7 +12,6 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
 .dialog {
     position: fixed;
     top: 25vh;
-    width: 40vw;
     z-index: 10000;
     overflow: hidden;
     padding: 0;
@@ -25,6 +24,18 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
 
     display: grid;
     grid-template-rows: auto 1fr;
+
+    &.dialog__small {
+        width: 300px;
+    }
+
+    &.dialog__medium {
+        width: 40vw;
+    }
+
+    &.dialog__large {
+        width: 60vw;
+    }
 
     .dialog--header {
         background-color: $dialog-header-bg;
