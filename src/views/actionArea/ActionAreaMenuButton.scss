@@ -19,6 +19,14 @@
         color: colors.$black;
         background-color: transparentize(colors.$black, 0.95);
     }
+
+    > * {
+        transition: transform 0.3s;
+    }
+
+    &:active > * {
+        transform: scale(0.9);
+    }
 }
 
 .action-area-menu-button__selected {
@@ -29,5 +37,9 @@
 
     &:hover {
         color: colors.$blue-500;
+    }
+
+    &:active > * {
+        transform: unset;
     }
 }
