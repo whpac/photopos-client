@@ -1,6 +1,6 @@
 import DialogController from '../dialog/DialogController';
 import Button from '../forms/Button';
-import LoginDialog from '../loginDialog/LoginDialog';
+import LoginDialog from '../login/LoginDialog';
 import "./Navbar.scss";
 
 function Navbar() {

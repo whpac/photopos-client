@@ -5,14 +5,28 @@ import InputBox from '../forms/InputBox';
 import FieldLayout from '../forms/FieldLayout';
 import './LoginDialog.scss';
 import DialogButtons from '../dialog/DialogButtons';
+import DialogController from '../dialog/DialogController';
+import RegisterDialog from './RegisterDialog';
 
 interface LoginDialogProps {
     dialogId: string;
+    defaultUsername?: string;
 };
 
-function LoginDialog({ dialogId }: LoginDialogProps) {
-    const [username, setUsername] = useState('');
+function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
+    const [username, setUsername] = useState(defaultUsername ?? '');
     const [password, setPassword] = useState('');
+
+    const displayRegisterDialog = () => {
+        const dialogController = DialogController.getInstance();
+        const registerDialogId = 'registerDialog';
+        dialogController.showDialog(registerDialogId,
+            <RegisterDialog
+                dialogId={registerDialogId}
+                defaultUsername={username} />
+        );
+        dialogController.closeDialog(dialogId);
+    };
 
     return (
         <Dialog dialogId={dialogId} title="Log in" size="small">
@@ -26,11 +40,11 @@ function LoginDialog({ dialogId }: LoginDialogProps) {
                 <Button isLink={true}>Forgot password?</Button>
             </div>
             <DialogButtons>
-                <Button>Register</Button>
+                <Button onClick={displayRegisterDialog}>Register</Button>
                 <Button isPrimary={true}>Log in</Button>
             </DialogButtons>
         </Dialog>
     );
 }
 
-export default LoginDialog;
+export default LoginDialog;;
