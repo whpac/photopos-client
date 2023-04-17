@@ -8,36 +8,53 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
     font: inherit;
     background: none;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
+    
+    &.button__default {
+        transition: background-color 0.3s, border-color 0.3s;
+        line-height: 1;
+        margin: 0 4px;
+        padding: 8px 16px;
+        border: 1px solid colors.$blue-500;
+        border-radius: 16px;
+        color: colors.$blue-900;
+    
+        &:hover {
+            background-color: $button-hover-bg;
+        }
+    
+        &:active {
+            background-color: colors.$blue-100;
+        }
 
-    line-height: 1;
-    margin: 0 4px;
-    padding: 8px 16px;
-    border: 1px solid colors.$blue-500;
-    border-radius: 16px;
-    color: colors.$blue-900;
-
-    &:hover {
-        background-color: $button-hover-bg;
+        &.button__primary {
+            background-color: colors.$blue-800;
+            border-color: colors.$blue-800;
+            color: colors.$white;
+    
+            &:hover {
+                background-color: colors.$blue-700;
+                border-color: colors.$blue-700;
+            }
+    
+            &:active {
+                background-color: colors.$blue-600;
+                border-color: colors.$blue-600;
+            }
+        }
     }
 
-    &:active {
-        background-color: colors.$blue-100;
-    }
-
-    &.button__primary {
-        background-color: colors.$blue-800;
-        border-color: colors.$blue-800;
-        color: colors.$white;
+    &.button__link {
+        transition: color 0.3s;
+        border: none;
+        color: colors.$blue-800;
+        text-decoration: underline;
 
         &:hover {
-            background-color: colors.$blue-700;
-            border-color: colors.$blue-700;
+            color: colors.$blue-700;
         }
 
         &:active {
-            background-color: colors.$blue-600;
-            border-color: colors.$blue-600;
+            color: colors.$blue-500;
         }
     }
 }
