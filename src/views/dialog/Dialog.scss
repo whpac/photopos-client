@@ -68,11 +68,14 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
             background-color: $dialog-close-button-hover-bg;
         }
 
+        > * {
+            transition: transform 0.3s;
+        }
+
         &:active {
             background-color: $dialog-close-button-active-bg;
 
             > * {
-                transition: transform 0.3s;
                 transform: scale(0.9);
             }
         }
