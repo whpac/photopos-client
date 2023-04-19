@@ -70,11 +70,14 @@ class SessionManager {
 
         const sessionId = data.sessionId;
         this._sessionId = sessionId;
-        this.fireSessionIdChanged(this, sessionId);
+        // TODO: Save session id to local storage
+        this.fireSessionIdChanged(this, this._sessionId);
     }
 
     public logOut() {
-
+        this._sessionId = SessionManager.SESSION_ID_ANON;
+        this.fireSessionIdChanged(this, this._sessionId);
+        // TODO: Send a request to the server to invalidate the session
     }
 }
 
