@@ -21,10 +21,10 @@ function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
     const displayRegisterDialog = () => displayDialog('registerDialog', RegisterDialog);
     const displayForgotDialog = () => displayDialog('forgotDialog', ForgotDialog);
 
-    const displayDialog = (newDialogId: string, Dialog: typeof LoginDialog) => {
+    const displayDialog = (newDialogId: string, DialogToShow: typeof LoginDialog) => {
         const dialogController = DialogController.getInstance();
         dialogController.showDialog(newDialogId,
-            <Dialog
+            <DialogToShow
                 dialogId={newDialogId}
                 defaultUsername={username} />
         );
@@ -50,4 +50,4 @@ function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
     );
 }
 
-export default LoginDialog;;
+export default LoginDialog;
