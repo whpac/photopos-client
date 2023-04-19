@@ -8,6 +8,10 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
     font: inherit;
     background: none;
     cursor: pointer;
+
+    &:disabled {
+        cursor: default;
+    }
     
     &.button__default {
         transition: background-color 0.3s, border-color 0.3s;
@@ -26,6 +30,12 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
             background-color: colors.$blue-100;
         }
 
+        &:disabled {
+            border-color: colors.$grayC;
+            color: colors.$gray8;
+            background-color: transparent;
+        }
+
         &.button__primary {
             background-color: colors.$blue-800;
             border-color: colors.$blue-800;
@@ -39,6 +49,11 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
             &:active {
                 background-color: colors.$blue-600;
                 border-color: colors.$blue-600;
+            }
+
+            &:disabled {
+                background-color: colors.$gray8;
+                border-color: colors.$gray8;
             }
         }
     }
@@ -55,6 +70,11 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
 
         &:active {
             color: colors.$blue-500;
+        }
+
+        &:disabled {
+            color: colors.$gray8;
+            text-decoration: underline dotted;
         }
     }
 }
