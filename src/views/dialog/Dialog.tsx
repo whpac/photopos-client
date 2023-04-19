@@ -9,9 +9,10 @@ interface DialogProps {
     title: string;
     children: React.ReactNode;
     size?: 'small' | 'medium' | 'large';
+    closeDisabled?: boolean;
 };
 
-function Dialog({ dialogId, title, children, size }: DialogProps) {
+function Dialog({ dialogId, title, children, size, closeDisabled }: DialogProps) {
     size ??= 'medium';
 
     const closeDialog = () => {
@@ -27,7 +28,7 @@ function Dialog({ dialogId, title, children, size }: DialogProps) {
             <div className="dialog--header">
                 <h2 className="dialog--title">{title}</h2>
                 <div className="dialog--header-buttons">
-                    <Button onClick={closeDialog}>
+                    <Button onClick={closeDialog} disabled={closeDisabled}>
                         <FontAwesomeIcon icon={icon({ name: 'xmark', style: 'solid' })} />
                     </Button>
                 </div>

@@ -51,7 +51,7 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
         }
     }
 
-    .dialog--header-buttons button {
+    .dialog--header-buttons .button {
         color: inherit;
         border: none;
 
@@ -64,20 +64,26 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
         text-align: center;
         box-sizing: content-box;
 
-        &:hover {
-            background-color: $dialog-close-button-hover-bg;
-        }
-
-        > * {
-            transition: transform 0.3s;
-        }
-
-        &:active {
-            background-color: $dialog-close-button-active-bg;
-
-            > * {
-                transform: scale(0.9);
+        &:not(:disabled) {
+            &:hover {
+                background-color: $dialog-close-button-hover-bg;
             }
+    
+            > * {
+                transition: transform 0.3s;
+            }
+    
+            &:active {
+                background-color: $dialog-close-button-active-bg;
+    
+                > * {
+                    transform: scale(0.9);
+                }
+            }
+        }
+
+        &:disabled {
+            opacity: 0.3;
         }
     }
 
