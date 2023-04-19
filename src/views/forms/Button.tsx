@@ -5,10 +5,11 @@ interface ButtonProps {
     title?: string;
     isPrimary?: boolean;
     isLink?: boolean;
+    isSubmit?: boolean;
     onClick?: () => void;
 };
 
-function Button({ children, title, isPrimary, isLink, onClick }: ButtonProps) {
+function Button({ children, title, isPrimary, isLink, isSubmit, onClick }: ButtonProps) {
     let classes = ['button'];
     if(isPrimary) {
         classes.push('button__primary');
@@ -22,7 +23,7 @@ function Button({ children, title, isPrimary, isLink, onClick }: ButtonProps) {
     return (
         <button
             className={classes.join(' ')}
-            type="button"
+            type={isSubmit ? 'submit' : 'button'}
             aria-label={title}
             title={title}
             onClick={onClick}>
