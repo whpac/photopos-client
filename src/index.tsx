@@ -3,6 +3,9 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.scss";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import Photopos from './dataModel/Photopos';
+
+Photopos.initialize();
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement

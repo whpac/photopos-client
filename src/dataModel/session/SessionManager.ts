@@ -10,14 +10,12 @@ type LoginResponse = {
 
 class SessionManager {
     /** The session id for an anonymous user */
-    public static readonly SESSION_ID_ANON = null;
+    protected static readonly SESSION_ID_ANON = null;
 
     /** The error code for a network error */
     public static readonly ERROR_NETWORK = 'session-manager/network';
     /** The error code for invalid credentials */
     public static readonly ERROR_CREDENTIALS = 'session-manager/credentials';
-
-    protected static instance: SessionManager | null = null;
 
     /**
      * An event that's fired when the session id changes
@@ -30,18 +28,8 @@ class SessionManager {
         return this._sessionId;
     }
 
-    protected constructor() {
+    public constructor() {
         [this.onSessionIdChanged, this.fireSessionIdChanged] = EventListenerSet.create();
-    }
-
-    /**
-     * Returns an instance of the SessionManager
-     */
-    public static getInstance() {
-        if(SessionManager.instance === null) {
-            SessionManager.instance = new SessionManager();
-        }
-        return SessionManager.instance;
     }
 
     /**
@@ -78,6 +66,14 @@ class SessionManager {
         this._sessionId = SessionManager.SESSION_ID_ANON;
         this.fireSessionIdChanged(this, this._sessionId);
         // TODO: Send a request to the server to invalidate the session
+    }
+
+    /**
+     * Checks whether the user is logged in
+     * @returns True if the user is logged in, false otherwise
+     */
+    public isLoggedIn() {
+        return this._sessionId !== SessionManager.SESSION_ID_ANON;
     }
 }
 

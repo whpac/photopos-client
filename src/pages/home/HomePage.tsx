@@ -3,12 +3,10 @@ import Map from '../../views/map/Map';
 import ActionArea from '../../views/actionArea/ActionArea';
 import StorageMapAdapter from '../../dataModel/mapData/StorageMapAdapter';
 import MapControlChannel from '../../views/map/MapControlChannel';
-import LocalStorageManager from '../../dataModel/storage/LocalStorageManager';
-import RemoteStorageManager from '../../dataModel/storage/RemoteStorageManager';
-import HybridStorageManager from '../../dataModel/storage/HybridStorageManager';
 import MapPoint from '../../views/map/MapPoint';
 import MapFilter from '../../views/map/MapFilter';
 import EventListenerSet, { EventListener } from '../../dataModel/EventListenerSet';
+import Photopos from '../../dataModel/Photopos';
 
 // A dummy map filter for testing purposes
 class MockMapFilter implements MapFilter {
@@ -24,12 +22,7 @@ class MockMapFilter implements MapFilter {
     }
 }
 
-let mapAdapter = new StorageMapAdapter(
-    new HybridStorageManager([
-        new LocalStorageManager(),
-        new RemoteStorageManager()
-    ])
-);
+let mapAdapter = new StorageMapAdapter(Photopos.storageManager);
 let mapControlChannel = new MapControlChannel();
 
 mapControlChannel.setMapFilter(new MockMapFilter());

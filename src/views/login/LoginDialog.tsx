@@ -10,6 +10,7 @@ import RegisterDialog from './RegisterDialog';
 import ForgotDialog from './ForgotDialog';
 import SessionManager from '../../dataModel/session/SessionManager';
 import FormParagraph from '../forms/FormParagraph';
+import Photopos from '../../dataModel/Photopos';
 
 interface LoginDialogProps {
     dialogId: string;
@@ -50,7 +51,7 @@ function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
         setFormDisabled(true);
 
         try {
-            await SessionManager.getInstance().logIn(username, password);
+            await Photopos.sessionManager.logIn(username, password);
             const dialogController = DialogController.getInstance();
             dialogController.closeDialog(dialogId);
         } catch(e: unknown) {

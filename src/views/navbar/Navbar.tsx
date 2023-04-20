@@ -3,13 +3,13 @@ import DialogController from '../dialog/DialogController';
 import Button from '../forms/Button';
 import LoginDialog from '../login/LoginDialog';
 import "./Navbar.scss";
-import SessionManager from '../../dataModel/session/SessionManager';
+import Photopos from '../../dataModel/Photopos';
 
 function Navbar() {
-    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [_, setSessionId] = useState<string | null>(null);
 
     useEffect(() => {
-        const sessionManager = SessionManager.getInstance();
+        const sessionManager = Photopos.sessionManager;
         setSessionId(sessionManager.sessionId);
 
         const listener = () => setSessionId(sessionManager.sessionId);
@@ -24,10 +24,10 @@ function Navbar() {
     };
 
     const logOut = () => {
-        SessionManager.getInstance().logOut();
+        Photopos.sessionManager.logOut();
     };
 
-    const isLoggedIn = sessionId !== SessionManager.SESSION_ID_ANON;
+    const isLoggedIn = Photopos.sessionManager.isLoggedIn();
 
     return (
         <nav>
