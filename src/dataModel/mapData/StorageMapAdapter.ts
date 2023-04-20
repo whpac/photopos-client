@@ -29,7 +29,7 @@ class StorageMapAdapter implements MapAdapter {
         const tilesToFetch = [];
         for(let x = minTile[0]; x <= maxTile[0]; x++) {
             for(let y = minTile[1]; y <= maxTile[1]; y++) {
-                tilesToFetch.push(new StorageId('MapTile', x + ',' + y));
+                tilesToFetch.push(new StorageId(MapTile.getEntityType(), x + ',' + y));
             }
         }
 
