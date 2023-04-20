@@ -32,17 +32,26 @@ class Photopos {
         return Photopos._sessionManager;
     }
 
-    public static initialize() {
+    /**
+     * Initializes the app.
+     */
+    public static async initialize() {
         if(Photopos.initialized) return;
+        Photopos.initialized = true;
 
+        // Initialize storage first, so that we can load our state
         Photopos._storageManager = new HybridStorageManager([
             new LocalStorageManager(),
             new RemoteStorageManager()
         ]);
-
-        Photopos._sessionManager = new SessionManager(Photopos._storageManager);
-
         Photopos.registerObjectTypes();
+
+        // Then start the session to have our user logged in
+        Photopos._sessionManager = new SessionManager(Photopos._storageManager);
+        const loadRecent = Photopos.sessionManager.loadRecent();
+
+        // Wait for those asynchronous tasks to finish
+        await loadRecent;
     }
 
     protected static registerObjectTypes() {

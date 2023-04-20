@@ -1,4 +1,7 @@
 import EventListenerSet, { EventListener } from '../EventListenerSet';
+import StorageId from '../storage/StorageId';
+import StorageManager from '../storage/StorageManager';
+import Session from './Session';
 
 type LoginResponse = {
     success: true,
@@ -11,6 +14,8 @@ type LoginResponse = {
 class SessionManager {
     /** The session id for an anonymous user */
     protected static readonly SESSION_ID_ANON = null;
+    /** Where the session id is stored */
+    protected static readonly SESSION_STORAGE_KEY = new StorageId(Session.getEntityType(), 'local');
 
     /** The error code for a network error */
     public static readonly ERROR_NETWORK = 'session-manager/network';
@@ -28,8 +33,22 @@ class SessionManager {
         return this._sessionId;
     }
 
-    public constructor() {
+    protected storageManager: StorageManager;
+
+    public constructor(storageManager: StorageManager) {
+        this.storageManager = storageManager;
+
         [this.onSessionIdChanged, this.fireSessionIdChanged] = EventListenerSet.create();
+    }
+
+    /**
+     * Loads the recently used session
+     */
+    public async loadRecent() {
+        const session = await this.storageManager.retrieve(SessionManager.SESSION_STORAGE_KEY);
+        if(session === null) return; // There's nothing to restore
+
+        this._sessionId = (session as Session).getSessionId();
     }
 
     /**
@@ -58,13 +77,22 @@ class SessionManager {
 
         const sessionId = data.sessionId;
         this._sessionId = sessionId;
-        // TODO: Save session id to local storage
-        this.fireSessionIdChanged(this, this._sessionId);
+
+        const session = new Session(sessionId);
+        this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
+
+        this.fireSessionIdChanged(this, this.sessionId);
+
+        console.log('Logged in successfully');
     }
 
     public logOut() {
         this._sessionId = SessionManager.SESSION_ID_ANON;
-        this.fireSessionIdChanged(this, this._sessionId);
+
+        const session = new Session(this.sessionId);
+        this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
+
+        this.fireSessionIdChanged(this, this.sessionId);
         // TODO: Send a request to the server to invalidate the session
     }
 
@@ -73,7 +101,7 @@ class SessionManager {
      * @returns True if the user is logged in, false otherwise
      */
     public isLoggedIn() {
-        return this._sessionId !== SessionManager.SESSION_ID_ANON;
+        return this.sessionId !== SessionManager.SESSION_ID_ANON;
     }
 }
 
