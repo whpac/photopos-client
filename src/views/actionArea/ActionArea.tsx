@@ -13,9 +13,9 @@ type PanelKey = 'nearby' | 'filter' | 'details';
 
 type ActionAreaProps = {
     mapControlChannel: MapControlChannel;
-}
+};
 
-function ActionArea({ mapControlChannel }: ActionAreaProps){
+function ActionArea({ mapControlChannel }: ActionAreaProps) {
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
     const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
 
@@ -28,14 +28,14 @@ function ActionArea({ mapControlChannel }: ActionAreaProps){
     };
 
     const menuItems = [
-        {key: 'nearby', title: 'Show nearby', icon: icon({name: 'map', style: 'regular'})},
-        {key: 'filter', title: 'Filter places', icon: icon({name: 'filter', style: 'solid'})},
+        { key: 'nearby', title: 'Show nearby', icon: icon({ name: 'map', style: 'regular' }) },
+        { key: 'filter', title: 'Filter places', icon: icon({ name: 'filter', style: 'solid' }) },
     ];
-    
+
     // The "Details" view should be only available when a point is selected
     if(selectedPoint !== null) {
         menuItems.push(
-            {key: 'details', title: 'Selected place', icon: icon({name: 'location-dot', style: 'solid'})}
+            { key: 'details', title: 'Selected place', icon: icon({ name: 'location-dot', style: 'solid' }) }
         );
     }
 
@@ -45,10 +45,10 @@ function ActionArea({ mapControlChannel }: ActionAreaProps){
     };
 
     mapControlChannel.onPointSelected.addListener((_, { point }) => {
-        if(point !== null && !point.valueEquals(selectedPoint)){
+        if(point !== null) {
             setVisiblePanel('details');
             setSelectedPoint(point);
-        }else{
+        } else {
             setVisiblePanel('nearby');
             setSelectedPoint(null);
         }

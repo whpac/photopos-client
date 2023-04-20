@@ -153,11 +153,11 @@ class MapController {
      */
     private displayMarker(point: MapPoint): MapMarker | null {
         const markerHash = point.getHashCode();
-        let marker = this.markers.get(markerHash);
-        if(marker) return null; // Marker already exists
+        const existingMarker = this.markers.get(markerHash);
+        if(existingMarker) return null; // Marker already exists
 
         this.points.add(point);
-        marker = new MapMarker(point);
+        const marker = new MapMarker(point);
         this.markers.set(markerHash, marker);
 
         if(point.hasLabel()) {
@@ -165,7 +165,18 @@ class MapController {
         }
 
         marker.addTo(this.map);
-        marker.on('click', () => this.controlChannel.selectPoint(marker!.getMapPoint()));
+        marker.on('click', () => {
+            const cc = this.controlChannel;
+            const selectedPoint = cc.getSelectedPoint();
+            const clickedPoint = marker.getMapPoint();
+
+            // Deselect if clicked on the selected point
+            if(clickedPoint.valueEquals(selectedPoint)) {
+                cc.selectPoint(null);
+            } else {
+                cc.selectPoint(clickedPoint);
+            }
+        });
         return marker;
     }
 
