@@ -1,5 +1,3 @@
-import MapTile from '../entities/MapTile';
-import Point from '../entities/Point';
 import StorageObject, { Primitive, SerializableObject } from './StorageObject';
 
 type ObjectOfPrmitives = {
@@ -112,8 +110,5 @@ class StorageSerializer {
         }
     }
 }
-
-StorageSerializer.registerObjectType('Point', Point);
-StorageSerializer.registerObjectType('MapTile', MapTile);
 
 export default StorageSerializer;
