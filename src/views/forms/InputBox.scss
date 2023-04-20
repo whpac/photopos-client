@@ -1,0 +1,37 @@
+@use '../../styles/colors.scss' as colors;
+
+$input-box-focus-shadow: transparentize(colors.$blue-500, 0.6);
+
+.input-box {
+    font: inherit;
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 4px 12px;
+    background-color: colors.$white;
+    border: 1px solid colors.$grayB;
+    border-bottom: 2px solid colors.$blue-700;
+    border-radius: 4px;
+
+    transition: border-color 0.3s, box-shadow 0.3s;
+
+    &:hover {
+        border-color: colors.$grayC;
+        border-bottom-color: colors.$blue-600;
+    }
+
+    &:active, &:focus {
+        outline: none;
+        border-color: colors.$blue-700;
+        border-bottom-color: colors.$blue-800;
+        box-shadow: 0 0 3px 1px $input-box-focus-shadow;
+    }
+
+    &:disabled {
+        background-color: colors.$grayE;
+        border-color: colors.$grayC;
+        border-bottom-color: colors.$grayC;
+        color: colors.$gray8;
+        box-shadow: none;
+    }
+}

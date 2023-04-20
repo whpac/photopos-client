@@ -1,3 +1,7 @@
+@use '../../styles/colors' as colors;
+
+$button-hover-bg: transparentize(colors.$blue-100, 0.5);
+
 nav {
     display: flex;
     flex-direction: row;

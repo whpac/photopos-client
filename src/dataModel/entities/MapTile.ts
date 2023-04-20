@@ -13,7 +13,7 @@ class MapTile implements StorageObject {
     }
 
     getEntityType(): string {
-        return 'MapTile';
+        return MapTile.getEntityType();
     }
 
     getSerializableFields(): SerializableObject {
@@ -26,6 +26,10 @@ class MapTile implements StorageObject {
         return new MapTile(
             raw.points as Point[]
         );
+    }
+
+    static getEntityType(): string {
+        return 'MapTile';
     }
 }
 

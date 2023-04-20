@@ -1,5 +1,6 @@
 import './App.scss';
 import HomePage from './pages/home/HomePage';
+import DialogManager from './views/dialog/DialogManager';
 import Navbar from './views/navbar/Navbar';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
             <div className="photopos-content">
                 <HomePage />
             </div>
+            <DialogManager />
         </div>
     );
 }

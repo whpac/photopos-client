@@ -10,7 +10,7 @@ class Point extends MapPoint implements StorageObject {
     }
 
     getEntityType(): string {
-        return 'Point';
+        return Point.getEntityType();
     }
 
     getSerializableFields(): SerializableObject {
@@ -27,6 +27,10 @@ class Point extends MapPoint implements StorageObject {
             raw.longitude as number,
             raw.label as string | null
         );
+    }
+
+    static getEntityType(): string {
+        return 'Point';
     }
 
     public override hasLabel(): boolean {

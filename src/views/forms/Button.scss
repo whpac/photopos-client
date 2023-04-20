@@ -1,0 +1,80 @@
+@use '../../styles/colors' as colors;
+
+$button-hover-bg: transparentize(colors.$blue-100, 0.5);
+
+
+.button {
+    appearance: none;
+    font: inherit;
+    background: none;
+    cursor: pointer;
+
+    &:disabled {
+        cursor: default;
+    }
+    
+    &.button__default {
+        transition: background-color 0.3s, border-color 0.3s;
+        line-height: 1;
+        margin: 0 4px;
+        padding: 8px 16px;
+        border: 1px solid colors.$blue-500;
+        border-radius: 16px;
+        color: colors.$blue-900;
+    
+        &:hover {
+            background-color: $button-hover-bg;
+        }
+    
+        &:active {
+            background-color: colors.$blue-100;
+        }
+
+        &:disabled {
+            border-color: colors.$grayC;
+            color: colors.$gray8;
+            background-color: transparent;
+        }
+
+        &.button__primary {
+            background-color: colors.$blue-800;
+            border-color: colors.$blue-800;
+            color: colors.$white;
+    
+            &:hover {
+                background-color: colors.$blue-700;
+                border-color: colors.$blue-700;
+            }
+    
+            &:active {
+                background-color: colors.$blue-600;
+                border-color: colors.$blue-600;
+            }
+
+            &:disabled {
+                background-color: colors.$gray8;
+                border-color: colors.$gray8;
+            }
+        }
+    }
+
+    &.button__link {
+        transition: color 0.3s;
+        border: none;
+        color: colors.$blue-800;
+        text-decoration: underline;
+
+        &:hover {
+            color: colors.$blue-700;
+        }
+
+        &:active {
+            color: colors.$blue-500;
+        }
+
+        &:disabled {
+            color: colors.$gray8;
+            text-decoration: underline dotted;
+        }
+    }
+}
