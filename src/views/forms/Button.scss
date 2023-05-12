@@ -24,6 +24,10 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
         border: 1px solid colors.$blue-500;
         border-radius: 16px;
         color: colors.$blue-900;
+
+        svg {
+            margin-right: 8px;
+        }
     
         &:hover {
             background-color: $button-hover-bg;
@@ -66,6 +70,10 @@ $button-hover-bg: transparentize(colors.$blue-100, 0.5);
         border: none;
         color: colors.$blue-800;
         text-decoration: underline;
+
+        svg {
+            margin-right: 4px;
+        }
 
         &:hover {
             color: colors.$blue-700;
