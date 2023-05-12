@@ -3,10 +3,17 @@ import StorageObject, { SerializableObject } from '../storage/StorageObject';
 
 class Point extends MapPoint implements StorageObject {
     public label: string | null = null;
+    public description: string | null = null;
+    public wikiArticle: string | null = null;
+    public qId: string | null = null;
 
-    constructor(latitude: number, longitude: number, label?: string | null) {
+    constructor(latitude: number, longitude: number, label?: string | null,
+        description?: string | null, wikiArticle?: string | null, qId?: string | null) {
         super(latitude, longitude);
         this.label = label ?? null;
+        this.description = description ?? null;
+        this.wikiArticle = wikiArticle ?? null;
+        this.qId = qId ?? null;
     }
 
     getEntityType(): string {
@@ -18,6 +25,9 @@ class Point extends MapPoint implements StorageObject {
             label: this.label,
             latitude: this.lat,
             longitude: this.lng,
+            description: this.description,
+            wikiArticle: this.wikiArticle,
+            qId: this.qId
         };
     }
 
@@ -25,7 +35,10 @@ class Point extends MapPoint implements StorageObject {
         return new Point(
             raw.latitude as number,
             raw.longitude as number,
-            raw.label as string | null
+            raw.label as string | null,
+            raw.description as string | null,
+            raw.wikiArticle as string | null,
+            raw.qId as string | null
         );
     }
 
