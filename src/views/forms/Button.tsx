@@ -8,9 +8,10 @@ interface ButtonProps {
     isSubmit?: boolean;
     disabled?: boolean;
     onClick?: () => void;
+    href?: string;
 };
 
-function Button({ children, title, isPrimary, isLink, isSubmit, disabled, onClick }: ButtonProps) {
+function Button({ children, title, isPrimary, isLink, isSubmit, disabled, onClick, href }: ButtonProps) {
     let classes = ['button'];
     if(isPrimary) {
         classes.push('button__primary');
@@ -19,6 +20,18 @@ function Button({ children, title, isPrimary, isLink, isSubmit, disabled, onClic
         classes.push('button__link');
     } else {
         classes.push('button__default');
+    }
+
+    if(href !== undefined) {
+        return (
+            <a
+                className={classes.join(' ')}
+                title={title}
+                target="_blank"
+                href={href}>
+                {children}
+            </a>
+        );
     }
 
     return (
