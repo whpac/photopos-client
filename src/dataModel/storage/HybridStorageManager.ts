@@ -1,5 +1,4 @@
 import StorageId from './StorageId';
-import StorageJob from './StorageJob';
 import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 
@@ -37,9 +36,10 @@ class HybridStorageManager implements StorageManager {
         return null;
     }
 
-    getQueue(): StorageJob[] {
-        // TODO: Implement this.
-        return [];
+    remove(key: StorageId): void {
+        for(const storageManager of this.storageManagers) {
+            storageManager.remove(key);
+        }
     }
 }
 

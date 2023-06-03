@@ -1,5 +1,4 @@
 import StorageId from './StorageId';
-import StorageJob from './StorageJob';
 import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
@@ -56,9 +55,8 @@ class LocalStorageManager implements StorageManager {
         };
     }
 
-    getQueue(): StorageJob[] {
-        // Saving in local storage is synchronous, so there is no queue.
-        return [];
+    remove(key: StorageId) {
+        localStorage.removeItem(key.toString());
     }
 }
 

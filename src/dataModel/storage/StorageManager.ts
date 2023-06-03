@@ -1,5 +1,4 @@
 import StorageId from './StorageId';
-import StorageJob from './StorageJob';
 import StorageObject from './StorageObject';
 
 export type StorageSaveOptions = {
@@ -52,9 +51,11 @@ interface StorageManager {
     retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null>;
 
     /**
-     * Returns a queue of pending storage jobs.
+     * Removes the entity with the given key from the storage.
+     * 
+     * @param key Key of the entity to remove.
      */
-    getQueue(): StorageJob[];
+    remove(key: StorageId): void;
 }
 
 export default StorageManager;

@@ -1,6 +1,5 @@
 import Photopos from '../Photopos';
 import StorageId from './StorageId';
-import StorageJob from './StorageJob';
 import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
 import StorageObject from './StorageObject';
 import StorageSerializer from './StorageSerializer';
@@ -58,9 +57,8 @@ class RemoteStorageManager implements StorageManager {
         }
     };
 
-    getQueue(): StorageJob[] {
-        // TODO: Implement this.
-        return [];
+    remove(key: StorageId): void {
+        // We don't actually need to remove anything from the server.
     }
 }
 
