@@ -3,29 +3,14 @@ import Map from '../../views/map/Map';
 import ActionArea from '../../views/actionArea/ActionArea';
 import StorageMapAdapter from '../../dataModel/mapData/StorageMapAdapter';
 import MapControlChannel from '../../views/map/MapControlChannel';
-import MapPoint from '../../views/map/MapPoint';
-import MapFilter from '../../views/map/MapFilter';
-import EventListenerSet, { EventListener } from '../../dataModel/EventListenerSet';
 import Photopos from '../../dataModel/Photopos';
-
-// A dummy map filter for testing purposes
-class MockMapFilter implements MapFilter {
-    onChange: EventListenerSet<MapFilter, null>;
-    fireOnChange: EventListener<MapFilter, null>;
-
-    constructor() {
-        [this.onChange, this.fireOnChange] = EventListenerSet.create();
-    }
-
-    filter(points: MapPoint[]): MapPoint[] {
-        return points.filter((point) => point.getLabel() !== 'Test 1');
-    }
-}
+import ForLaterMapFilter from '../../dataModel/mapData/ForLaterMapFilter';
 
 let mapAdapter = new StorageMapAdapter(Photopos.storageManager);
 let mapControlChannel = new MapControlChannel();
+let mapFilter = new ForLaterMapFilter(Photopos.forLaterPointsList);
 
-mapControlChannel.setMapFilter(new MockMapFilter());
+mapControlChannel.setMapFilter(mapFilter);
 
 function HomePage() {
     return (
