@@ -1,4 +1,5 @@
 import EventListenerSet, { EventListener } from '../EventListenerSet';
+import Photopos from '../Photopos';
 import PointList from '../entities/PointList';
 import StorageId from '../storage/StorageId';
 import StorageManager from '../storage/StorageManager';
@@ -88,7 +89,7 @@ class SessionManager {
         this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
 
         this.fireSessionIdChanged(this, this.sessionId);
-        this.clearPointsList();
+        this.reloadPointsList();
     }
 
     public logOut() {
@@ -98,7 +99,7 @@ class SessionManager {
         this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
 
         this.fireSessionIdChanged(this, this.sessionId);
-        this.clearPointsList();
+        this.reloadPointsList();
         // TODO: Send a request to the server to invalidate the session
     }
 
@@ -134,8 +135,12 @@ class SessionManager {
         this.storageManager.save(SessionManager.POINT_LIST_STORAGE_KEY, pointsList);
     }
 
-    public clearPointsList() {
+    public async reloadPointsList() {
         this.storageManager.remove(SessionManager.POINT_LIST_STORAGE_KEY);
+        // Re-download the list
+        let pointsList = await this.storageManager.retrieve(SessionManager.POINT_LIST_STORAGE_KEY) as PointList | null;
+        if(pointsList === null) pointsList = new PointList();
+        Photopos.forLaterPointsList.fromOtherList(pointsList);
     }
 }
 

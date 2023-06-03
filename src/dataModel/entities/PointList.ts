@@ -34,6 +34,14 @@ class PointList implements StorageObject {
         this.points.delete(point.getHashCode());
     }
 
+    /**
+     * Copies points from another PointList
+     * @param list The other PointList to copy from
+     */
+    fromOtherList(list: PointList): void {
+        this.points = list.points;
+    }
+
     getEntityType(): string {
         return PointList.getEntityType();
     }
