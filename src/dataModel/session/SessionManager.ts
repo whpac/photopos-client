@@ -88,8 +88,7 @@ class SessionManager {
         this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
 
         this.fireSessionIdChanged(this, this.sessionId);
-
-        console.log('Logged in successfully');
+        this.clearPointsList();
     }
 
     public logOut() {
@@ -99,6 +98,7 @@ class SessionManager {
         this.storageManager.save(SessionManager.SESSION_STORAGE_KEY, session);
 
         this.fireSessionIdChanged(this, this.sessionId);
+        this.clearPointsList();
         // TODO: Send a request to the server to invalidate the session
     }
 
@@ -132,6 +132,10 @@ class SessionManager {
         }
 
         this.storageManager.save(SessionManager.POINT_LIST_STORAGE_KEY, pointsList);
+    }
+
+    public clearPointsList() {
+        this.storageManager.remove(SessionManager.POINT_LIST_STORAGE_KEY);
     }
 }
 
