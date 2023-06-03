@@ -1,5 +1,6 @@
 import MapTile from './entities/MapTile';
 import Point from './entities/Point';
+import PointList from './entities/PointList';
 import Session from './session/Session';
 import SessionManager from './session/SessionManager';
 import HybridStorageManager from './storage/HybridStorageManager';
@@ -58,6 +59,7 @@ class Photopos {
         StorageSerializer.registerObjectType(Point.getEntityType(), Point);
         StorageSerializer.registerObjectType(MapTile.getEntityType(), MapTile);
         StorageSerializer.registerObjectType(Session.getEntityType(), Session);
+        StorageSerializer.registerObjectType(PointList.getEntityType(), PointList);
     }
 }
 

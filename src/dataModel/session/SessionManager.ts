@@ -1,4 +1,5 @@
 import EventListenerSet, { EventListener } from '../EventListenerSet';
+import PointList from '../entities/PointList';
 import StorageId from '../storage/StorageId';
 import StorageManager from '../storage/StorageManager';
 import Session from './Session';
@@ -16,6 +17,8 @@ class SessionManager {
     protected static readonly SESSION_ID_ANON = null;
     /** Where the session id is stored */
     protected static readonly SESSION_STORAGE_KEY = new StorageId(Session.getEntityType(), 'local');
+    /** Where the points list is stored */
+    protected static readonly POINT_LIST_STORAGE_KEY = new StorageId(PointList.getEntityType(), 'forlater');
 
     /** The error code for a network error */
     public static readonly ERROR_NETWORK = 'session-manager/network';
@@ -102,6 +105,30 @@ class SessionManager {
      */
     public isLoggedIn() {
         return this.sessionId !== SessionManager.SESSION_ID_ANON;
+    }
+
+    /**
+     * Returns the list of points saved for lated by the current user
+     * @returns The points list for the current user
+     */
+    public async getPointsList(): Promise<PointList> {
+        if(!this.isLoggedIn()) {
+            return new PointList();
+        }
+
+        let pointsList = await this.storageManager.retrieve(SessionManager.POINT_LIST_STORAGE_KEY);
+        if(pointsList === null) {
+            return new PointList();
+        }
+        return pointsList as PointList;
+    }
+
+    public savePointsList(pointsList: PointList) {
+        if(!this.isLoggedIn()) {
+            return;
+        }
+
+        this.storageManager.save(SessionManager.POINT_LIST_STORAGE_KEY, pointsList);
     }
 }
 

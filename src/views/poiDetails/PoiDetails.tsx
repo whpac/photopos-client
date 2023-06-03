@@ -5,6 +5,8 @@ import MapPoint from '../map/MapPoint';
 import Button from '../forms/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid, brands, regular } from '@fortawesome/fontawesome-svg-core/import.macro';
+import Photopos from '../../dataModel/Photopos';
+import { useState } from 'react';
 
 type PoiDetailsProps = {
     point: MapPoint | null;
@@ -28,6 +30,29 @@ function PoiDetails({ point }: PoiDetailsProps) {
         wikiArticle = point.wikiArticle;
         qId = point.qId;
     }
+
+    const [isSavedForLater, setIsSavedForLater] = useState<boolean | null>(null);
+    if(point !== null) {
+        (async () => {
+            let savedForLater = await Photopos.sessionManager.getPointsList();
+            setIsSavedForLater(savedForLater.isOnList(point));
+        })();
+    }
+
+    const removePointFromSavedForLater = async () => {
+        if(point === null) return;
+        let savedForLater = await Photopos.sessionManager.getPointsList();
+        savedForLater.removeFromList(point);
+        Photopos.sessionManager.savePointsList(savedForLater);
+        setIsSavedForLater(false);
+    };
+    const addPointToSavedForLater = async () => {
+        if(point === null) return;
+        let savedForLater = await Photopos.sessionManager.getPointsList();
+        savedForLater.addToList(point);
+        Photopos.sessionManager.savePointsList(savedForLater);
+        setIsSavedForLater(true);
+    };
 
     return (
         <ActionAreaContent title="Point details">
@@ -65,10 +90,18 @@ function PoiDetails({ point }: PoiDetailsProps) {
                         <FontAwesomeIcon icon={solid('arrow-up-from-bracket')} />
                         Upload photo
                     </Button>
-                    <Button>
-                        <FontAwesomeIcon icon={regular('bookmark')} />
-                        Save for later
-                    </Button>
+                    {isSavedForLater === false &&
+                        <Button onClick={addPointToSavedForLater}>
+                            <FontAwesomeIcon icon={regular('bookmark')} />
+                            Save for later
+                        </Button>
+                    }
+                    {isSavedForLater === true &&
+                        <Button onClick={removePointFromSavedForLater}>
+                            <FontAwesomeIcon icon={solid('bookmark')} />
+                            Saved for later
+                        </Button>
+                    }
                 </div>
             </div>
         </ActionAreaContent>
