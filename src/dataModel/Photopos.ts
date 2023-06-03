@@ -14,6 +14,7 @@ class Photopos {
     protected static initialized = false;
     protected static _storageManager: StorageManager;
     protected static _sessionManager: SessionManager;
+    protected static _forLaterPointsList: PointList;
 
     /**
      * The app's storage manager
@@ -34,6 +35,15 @@ class Photopos {
     }
 
     /**
+     * The user's "for later" points list
+     */
+    public static get forLaterPointsList() {
+        Photopos.initialize();
+
+        return Photopos._forLaterPointsList;
+    }
+
+    /**
      * Initializes the app.
      */
     public static async initialize() {
@@ -47,12 +57,10 @@ class Photopos {
         ]);
         Photopos.registerObjectTypes();
 
-        // Then start the session to have our user logged in
+        // Then start the session to have our user logged in and load the "for later" list
         Photopos._sessionManager = new SessionManager(Photopos._storageManager);
-        const loadRecent = Photopos.sessionManager.loadRecent();
-
-        // Wait for those asynchronous tasks to finish
-        await loadRecent;
+        await Photopos.sessionManager.loadRecent();
+        Photopos._forLaterPointsList = await Photopos.sessionManager.getPointsList();
     }
 
     protected static registerObjectTypes() {
