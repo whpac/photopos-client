@@ -52,6 +52,9 @@ class SessionManager {
         if(session === null) return; // There's nothing to restore
 
         this._sessionId = (session as Session).getSessionId();
+
+        // Load it early so that it's ready when the user needs it
+        this.getPointsList();
     }
 
     /**
