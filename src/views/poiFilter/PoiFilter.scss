@@ -1,0 +1,16 @@
+.poi-filter {
+    padding: 0 16px 16px 16px;
+
+    label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+
+    input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+    }
+}

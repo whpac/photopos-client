@@ -3,19 +3,21 @@ import PoiList from '../poiList/PoiList';
 import ActionAreaMenu from './ActionAreaMenu';
 import { useState } from 'react';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
-import ActionAreaContent from './ActionAreaContent';
 import Point from '../../dataModel/entities/Point';
 import MapPoint from '../map/MapPoint';
 import PoiDetails from '../poiDetails/PoiDetails';
 import MapControlChannel from '../map/MapControlChannel';
+import ForLaterMapFilter from '../../dataModel/mapData/ForLaterMapFilter';
+import PoiFilter from '../poiFilter/PoiFilter';
 
 type PanelKey = 'nearby' | 'filter' | 'details';
 
 type ActionAreaProps = {
     mapControlChannel: MapControlChannel;
+    mapFilter: ForLaterMapFilter;
 };
 
-function ActionArea({ mapControlChannel }: ActionAreaProps) {
+function ActionArea({ mapControlChannel, mapFilter }: ActionAreaProps) {
     const [visiblePanel, setVisiblePanel] = useState<PanelKey>('nearby');
     const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
 
@@ -23,7 +25,7 @@ function ActionArea({ mapControlChannel }: ActionAreaProps) {
     const referencePoint = new Point(52.4, 16.9);
     const panels = {
         nearby: <PoiList referencePoint={referencePoint} mapControlChannel={mapControlChannel} />,
-        filter: <ActionAreaContent title="Filter places"><span>Filter options here</span></ActionAreaContent>,
+        filter: <PoiFilter filter={mapFilter} />,
         details: <PoiDetails point={selectedPoint} />,
     };
 

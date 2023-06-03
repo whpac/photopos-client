@@ -19,7 +19,7 @@ function HomePage() {
                 <Map adapter={mapAdapter} mapControlChannel={mapControlChannel} />
             </div>
             <div className="home-page--action-area">
-                <ActionArea mapControlChannel={mapControlChannel} />
+                <ActionArea mapControlChannel={mapControlChannel} mapFilter={mapFilter} />
             </div>
         </div>
     );
