@@ -1,3 +1,4 @@
+import Photopos from '../Photopos';
 import StorageId from './StorageId';
 import StorageJob from './StorageJob';
 import StorageManager, { AnnotatedStorageObject, StorageSaveOptions } from './StorageManager';
@@ -9,7 +10,20 @@ class RemoteStorageManager implements StorageManager {
     protected readonly API_URL = 'http://localhost/photopos/server/api/api.php?resource=';
 
     save(key: StorageId, value: StorageObject, options?: StorageSaveOptions) {
-        // TODO: Implement this.
+        const envelope = {
+            expires: null,
+            success: true,
+            payload: StorageSerializer.serialize(value)
+        };
+
+        fetch(this.API_URL + key.toString(), {
+            method: 'POST',
+            body: JSON.stringify(envelope),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Session-Id': Photopos.sessionManager.sessionId ?? ''
+            }
+        });
     }
 
     async retrieve(key: StorageId): Promise<StorageObject | null> {
@@ -19,7 +33,11 @@ class RemoteStorageManager implements StorageManager {
 
     async retrieveWithMetadata(key: StorageId): Promise<AnnotatedStorageObject | null> {
         try {
-            const response = await fetch(this.API_URL + key.toString());
+            const response = await fetch(this.API_URL + key.toString(), {
+                headers: {
+                    'X-Session-Id': Photopos.sessionManager.sessionId ?? ''
+                }
+            });
             if(!response.ok) return null;
 
             const data = await response.json();
@@ -38,7 +56,7 @@ class RemoteStorageManager implements StorageManager {
             console.error(e);
             return null;
         }
-    }
+    };
 
     getQueue(): StorageJob[] {
         // TODO: Implement this.
