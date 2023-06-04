@@ -3,11 +3,9 @@ import Dialog from '../dialog/Dialog';
 import Button from '../forms/Button';
 import InputBox from '../forms/InputBox';
 import FieldLayout from '../forms/FieldLayout';
-import './LoginDialog.scss';
 import DialogButtons from '../dialog/DialogButtons';
 import DialogController from '../dialog/DialogController';
 import RegisterDialog from './RegisterDialog';
-import ForgotDialog from './ForgotDialog';
 import SessionManager from '../../dataModel/session/SessionManager';
 import FormParagraph from '../forms/FormParagraph';
 import Photopos from '../../dataModel/Photopos';
@@ -35,7 +33,6 @@ function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
     const [error, setError] = useState<string | null>(null);
 
     const displayRegisterDialog = () => displayDialog('registerDialog', RegisterDialog);
-    const displayForgotDialog = () => displayDialog('forgotDialog', ForgotDialog);
 
     const displayDialog = (newDialogId: string, DialogToShow: typeof LoginDialog) => {
         const dialogController = DialogController.getInstance();
@@ -86,14 +83,6 @@ function LoginDialog({ dialogId, defaultUsername }: LoginDialogProps) {
                         id="login-password"
                         disabled={formDisabled} />
                 </FieldLayout>
-                <div className="login-dialog--forgot">
-                    <Button
-                        onClick={displayForgotDialog}
-                        isLink={true}
-                        disabled={formDisabled}>
-                        Forgot password?
-                    </Button>
-                </div>
                 <DialogButtons>
                     <Button
                         onClick={displayRegisterDialog}

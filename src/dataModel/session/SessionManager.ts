@@ -100,7 +100,6 @@ class SessionManager {
 
         this.fireSessionIdChanged(this, this.sessionId);
         this.reloadPointsList();
-        // TODO: Send a request to the server to invalidate the session
     }
 
     /**
@@ -109,6 +108,17 @@ class SessionManager {
      */
     public isLoggedIn() {
         return this.sessionId !== SessionManager.SESSION_ID_ANON;
+    }
+
+    public async register(username: string, password: string) {
+        const requestData = { username, password };
+        await fetch('http://localhost/photopos/server/api/register.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
     }
 
     /**
