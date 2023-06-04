@@ -18,6 +18,7 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
     border: 1px solid $action-area-border;
     box-shadow: 1px 2px 6px 1px $action-area-shadow;
     backdrop-filter: blur(4px);
+    width: calc(100% - 40px);
 
     &.action-area--menu-only {
         width: 48px;
@@ -49,5 +50,9 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
     @media (max-width: layout.$action-area-menu-not-full-height) {
         height: 60%;
         margin: 20px 8px;
+    }
+
+    @media (max-width: layout.$action-area-full-width) {
+        width: calc(100% - 16px);
     }
 }

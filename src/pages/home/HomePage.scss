@@ -17,6 +17,8 @@
         grid-column: 2;
         z-index: 1000; // To show it over the map
         justify-self: right;
+        justify-items: right;
+        width: 100%;
 
         @include layout.stretch-contents;
 
