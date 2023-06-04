@@ -85,6 +85,10 @@ $dialog-close-button-active-bg: transparentize(colors.$black, 0.8);
         &:disabled {
             opacity: 0.3;
         }
+
+        svg {
+            margin-right: 0;
+        }
     }
 
     .dialog--content {
