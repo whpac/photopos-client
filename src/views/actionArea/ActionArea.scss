@@ -34,4 +34,20 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
     .action-area--menu {
         background: $action-area-menu-bg;
     }
+
+    @media (max-width: layout.$action-area-menu-at-bottom) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        height: calc(100% - 40px);
+
+        &.action-area--menu-only {
+            width: unset;
+            height: 56px;
+        }
+    }
+
+    @media (max-width: layout.$action-area-menu-not-full-height) {
+        height: 60%;
+        margin: 20px 8px;
+    }
 }

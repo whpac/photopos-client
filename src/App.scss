@@ -29,4 +29,8 @@ $content-shadow2: rgba(0, 0, 0, 0.07);
         
         @include layout.stretch-contents;
     }
+
+    @media (max-width: layout.$action-area-full-width) {
+        padding: 24px 8px 8px 8px;
+    }
 }

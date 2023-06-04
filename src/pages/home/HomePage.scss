@@ -19,5 +19,16 @@
         justify-self: right;
 
         @include layout.stretch-contents;
+
+        @media (max-width: layout.$action-area-menu-at-bottom) {
+            justify-self: stretch;
+            align-self: end;
+            height: 100%;
+            align-items: end;
+        }
+    }
+
+    @media (max-width: layout.$action-area-full-width) {
+        grid-template-columns: 0px 1fr;
     }
 }
