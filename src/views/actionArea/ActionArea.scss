@@ -19,6 +19,10 @@ $action-area-content-bg: transparentize(colors.$white, 0.15);
     box-shadow: 1px 2px 6px 1px $action-area-shadow;
     backdrop-filter: blur(4px);
 
+    &.action-area--menu-only {
+        width: 48px;
+    }
+
     .action-area--content {
         background: $action-area-content-bg;
         border-right: 1px solid colors.$grayE;

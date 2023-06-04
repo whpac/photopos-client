@@ -10,7 +10,7 @@ import MapControlChannel from '../map/MapControlChannel';
 import ForLaterMapFilter from '../../dataModel/mapData/ForLaterMapFilter';
 import PoiFilter from '../poiFilter/PoiFilter';
 
-type PanelKey = 'nearby' | 'filter' | 'details';
+type PanelKey = 'nearby' | 'filter' | 'details' | null;
 
 type ActionAreaProps = {
     mapControlChannel: MapControlChannel;
@@ -42,8 +42,10 @@ function ActionArea({ mapControlChannel, mapFilter }: ActionAreaProps) {
     }
 
     let onMenuItemChange = (key: string) => {
-        if(key in panels)
+        if(key in panels && key !== visiblePanel)
             setVisiblePanel(key as PanelKey);
+        else
+            setVisiblePanel(null);
     };
 
     mapControlChannel.onPointSelected.addListener((_, { point }) => {
@@ -56,11 +58,17 @@ function ActionArea({ mapControlChannel, mapFilter }: ActionAreaProps) {
         }
     });
 
+    let cssClasses = ['action-area'];
+    if(visiblePanel === null)
+        cssClasses.push('action-area--menu-only');
+
     return (
-        <div className="action-area">
-            <div className="action-area--content">
-                {panels[visiblePanel]}
-            </div>
+        <div className={cssClasses.join(' ')}>
+            {visiblePanel !== null &&
+                <div className="action-area--content">
+                    {panels[visiblePanel]}
+                </div>
+            }
             <div className="action-area--menu">
                 <ActionAreaMenu
                     onMenuItemChange={onMenuItemChange}

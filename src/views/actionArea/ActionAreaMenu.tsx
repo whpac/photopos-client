@@ -1,12 +1,12 @@
-import './ActionAreaMenu.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import './ActionAreaMenu.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ActionAreaMenuButton from './ActionAreaMenuButton';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 type ActionAreaMenuProps = {
     onMenuItemChange?: (key: string) => void,
     menuItems: ActionAreaMenuButtonDefinition[],
-    selectedItem: string
+    selectedItem: string | null;
 };
 type ActionAreaMenuButtonDefinition = {
     key: string,
@@ -26,7 +26,7 @@ function ActionAreaMenu({ onMenuItemChange, menuItems, selectedItem }: ActionAre
                     <ActionAreaMenuButton key={item.key} id={item.key}
                         title={item.title} isActive={item.key === selectedItem}
                         onClick={onMenuItemClick}>
-                            <FontAwesomeIcon icon={item.icon} />
+                        <FontAwesomeIcon icon={item.icon} />
                     </ActionAreaMenuButton>
                 );
             })}
