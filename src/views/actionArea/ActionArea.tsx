@@ -1,7 +1,7 @@
 import './ActionArea.scss';
 import PoiList from '../poiList/PoiList';
 import ActionAreaMenu from './ActionAreaMenu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import Point from '../../dataModel/entities/Point';
 import MapPoint from '../map/MapPoint';
@@ -48,14 +48,19 @@ function ActionArea({ mapControlChannel, mapFilter }: ActionAreaProps) {
             setVisiblePanel(null);
     };
 
-    mapControlChannel.onPointSelected.addListener((_, { point }) => {
-        if(point !== null) {
-            setVisiblePanel('details');
-            setSelectedPoint(point);
-        } else {
-            setVisiblePanel('nearby');
-            setSelectedPoint(null);
-        }
+    useEffect(() => {
+        const listener = (_: MapControlChannel, { point }: { point: MapPoint | null; }) => {
+            if(point !== null) {
+                setVisiblePanel('details');
+                setSelectedPoint(point);
+            } else {
+                if(visiblePanel === 'details') setVisiblePanel('nearby');
+                setSelectedPoint(null);
+            }
+        };
+
+        mapControlChannel.onPointSelected.addListener(listener);
+        return () => mapControlChannel.onPointSelected.removeListener(listener);
     });
 
     let cssClasses = ['action-area'];
